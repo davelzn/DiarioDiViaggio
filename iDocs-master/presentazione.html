@@ -110,7 +110,12 @@
             La condivisione dei viaggi è sempre pubblica. Ogni viaggio può includere una raccolta di contenuti come foto, immagini, video e testi, ciascuno accompagnato da tag e data. Tutti i viaggi e i relativi contenuti vengono mostrati in un’unica bacheca pubblica nella pagina principale (Home). Gli utenti possono visualizzare i contenuti dei viaggi e mettere like.
             
             È disponibile anche un'area riservata (dashboard) che permette di gestire i propri viaggi modificandone i contenuti o eliminandoli.</p>
-          <img src="/DiarioDiViaggio/iDocs-master/assets/images/ArchitetturaInfo.png" alt="Architettura dell'informazione">
+          <img src="/iDocs-master/assets/images/ArchitetturaInfo.png" alt="Architettura dell'informazione">
+          <p class="lead">
+            <strong>Utente</strong>(id_utente (PK), nome, email, password)<br>
+            <strong>Viaggio</strong>(id_viaggio (PK), titolo, descrizione, data_inizio, data_fine, id_utente (FK))<br>
+            <strong>Post</strong>(id_post (PK), contenuto, tipo, data, posizione, id_viaggio (FK))
+          </p>
         </section>
         
 		<hr class="divider">
@@ -118,11 +123,6 @@
 
     <section id="UML">
       <h2>UML</h2>
-      <p class="lead">
-        <strong>Utente</strong>(id_utente (PK), nome, email, password)<br>
-        <strong>Viaggio</strong>(id_viaggio (PK), titolo, descrizione, data_inizio, data_fine, id_utente (FK))<br>
-        <strong>Post</strong>(id_post (PK), contenuto, tipo, data, posizione, id_viaggio (FK))
-      </p>
     </section>
     
 
