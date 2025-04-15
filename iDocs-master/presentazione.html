@@ -116,9 +116,15 @@
 		<hr class="divider">
 
 
-        <section id="UML">
-              <h2>UML</h2>
-            </section>
+    <section id="UML">
+      <h2>UML</h2>
+      <p class="lead">
+        <strong>Utente</strong>(id_utente (PK), nome, email, password)<br>
+        <strong>Viaggio</strong>(id_viaggio (PK), titolo, descrizione, data_inizio, data_fine, id_utente (FK))<br>
+        <strong>Post</strong>(id_post (PK), contenuto, tipo, data, posizione, id_viaggio (FK))
+      </p>
+    </section>
+    
 
         <section id="umlcasiduso">
           <h2>Diagramma di Casi d'uso</h2>
@@ -128,7 +134,7 @@
 
         <section id="umloggetti">
           <h2>Diagrammi di oggetti</h2>
-          <img src="">
+          <img src="/iDocs-master/assets/images/diagramma-oggetti.jpg" alt="Diagramma di oggetti">
 
         </section>
 
@@ -140,7 +146,7 @@
 
         <section id="umlsequenza">
           <h2>Diagrammi di Sequenza</h2>
-          <img src="">
+          <img src="/iDocs-master/assets/images/Diagramma-sequenza.jpg" alt="Diagramma di Sequenza">
 
         </section>
 
