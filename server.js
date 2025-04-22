@@ -13,9 +13,9 @@ database.createTable();
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.post("/insert", async (req, res) => {
-    const viaggi = req.body.viaggi;
+    const viaggio = req.body.viaggio;
     try {
-        await database.insert(viaggi);
+        await database.insert(viaggio);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
@@ -23,7 +23,7 @@ app.post("/insert", async (req, res) => {
     }
 });
 
-app.get("/viaggio", async (req, res) => {
+app.get("/viaggi", async (req, res) => {
     const list = await database.select();
     res.json(list);
     console.log("Server", list);
