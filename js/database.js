@@ -22,26 +22,21 @@ const executeQuery = (sql,par = []) => {
 const database = {
     init: (name) => {
         let sql = `INSERT INTO type (name) VALUES (${name})`;
-        return executeQuery(sql)
+        return executeQuery(sql);
     },
+
     createTable: async () => {
         await executeQuery(`
-        CREATE TABLE IF NOT EXISTS viaggio (
-            id INT PRIMARY KEY AUTO_INCREMENT,
-            idType VARCHAR(50),
-            date DATE NOT NULL,
-            hour INT NOT NULL,
-            name VARCHAR(50)
-        )`);
-        await executeQuery(`
-        CREATE TABLE IF NOT EXISTS visit (
-            id INT PRIMARY KEY AUTO_INCREMENT,
-            idType VARCHAR(50),
-            date DATE NOT NULL,
-            hour INT NOT NULL,
-            name VARCHAR(50)
-        )`);
-        console.log('Tabella "visit" creata!');
+            CREATE TABLE IF NOT EXISTS viaggio (
+                id_viaggio INT PRIMARY KEY AUTO_INCREMENT,
+                titolo VARCHAR(100),
+                descrizione TEXT,
+                data_inizio DATE,
+                data_fine DATE,
+                id_utente INT
+            )
+        `);
+        console.log('done');
     },
     insert: async (visit) => {
         let sql = `
