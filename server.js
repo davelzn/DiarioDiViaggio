@@ -13,7 +13,7 @@ database.createTable();
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.post("/insert", async (req, res) => {
-    const viaggi = req.body.viaggio;
+    const viaggi = req.body.viaggi;
     try {
         await database.insert(viaggi);
         res.json({ result: "ok" });
