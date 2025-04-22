@@ -1,32 +1,41 @@
 const express = require("express");
-const http = require('http');
-const path = require('path');
-const cors = require('cors');
+const http = require("http");
+const path = require("path");
+const cors = require("cors");
+const database = require("./js/database");
+
 const app = express();
-//const database = require("/database.js");
 app.use(express.json());
 app.use(cors());
-//database.createTable();
+
+database.createTable();
 
 app.use("/", express.static(path.join(__dirname, "public")));
+
 app.post("/insert", async (req, res) => {
-    const visit = req.body.visit;
+    const viaggio = req.body.viaggio;
     try {
-        await database.insert(visit);
+        await database.insert(viaggio);
         res.json({ result: "ok" });
     } catch (e) {
+        console.error(e);
         res.status(500).json({ result: "ko" });
     }
-})
-app.get('/visits', async (req, res) => {
+});
+
+app.get("/viaggi", async (req, res) => {
     const list = await database.select();
     res.json(list);
     console.log("Server", list);
+    
 });
-app.delete('/delete/:id', async (req, res) => {
+
+app.delete("/delete/:id", async (req, res) => {
     await database.delete(req.params.id);
     res.json({ result: "ok" });
-})
+   
+});
+
 const server = http.createServer(app);
 const port = 5600;
 server.listen(port, () => {
