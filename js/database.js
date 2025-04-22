@@ -38,24 +38,35 @@ const database = {
         `);
         console.log('done');
     },
-    insert: async (visit) => {
+    insert: async (viaggio) => {
         let sql = `
-    INSERT INTO visit(idType, date, hour, name)
-    VALUES (?, ?, ?, ?)`;
-        return await executeQuery(sql, [visit.idType, visit.date, visit.hour, visit.name]);
+            INSERT INTO viaggio (titolo, descrizione, data_inizio, data_fine, id_utente)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        return await executeQuery(sql, [
+            viaggio.titolo,
+            viaggio.descrizione,
+            viaggio.data_inizio,
+            viaggio.data_fine,
+            viaggio.id_utente
+        ]);
     },
-    select: () =>{
-        const sql = `
-        SELECT id, idType, hour, date, name
-        FROM visit`;
+
+    select: () => {
+        let sql = `
+            SELECT id_viaggio, titolo, descrizione, data_inizio, data_fine, id_utente
+            FROM viaggio
+        `;
         return executeQuery(sql);
     },
-    delete: (id) =>{
+
+    delete: (id) => {
         let sql = `
-        DELETE FROM visit WHERE id=$ID`;
-        sql = sql.replace("$ID",id);
+            DELETE FROM viaggio WHERE id_viaggio = $ID
+        `;
+        sql = sql.replace("$ID", id);
         return executeQuery(sql);
-    },
+    }
     
 }
 
