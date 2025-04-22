@@ -2,3 +2,4 @@ conf.json
 package.json
 license
 ca.pem
+prod.conf.json

@@ -26,6 +26,14 @@ const database = {
     },
     createTable: async () => {
         await executeQuery(`
+        CREATE TABLE IF NOT EXISTS viaggio (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            idType VARCHAR(50),
+            date DATE NOT NULL,
+            hour INT NOT NULL,
+            name VARCHAR(50)
+        )`);
+        await executeQuery(`
         CREATE TABLE IF NOT EXISTS visit (
             id INT PRIMARY KEY AUTO_INCREMENT,
             idType VARCHAR(50),

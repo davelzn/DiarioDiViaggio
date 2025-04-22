@@ -3,10 +3,10 @@ const http = require('http');
 const path = require('path');
 const cors = require('cors');
 const app = express();
-const database = require("./database");
+//const database = require("/database.js");
 app.use(express.json());
 app.use(cors());
-database.createTable();
+//database.createTable();
 
 app.use("/", express.static(path.join(__dirname, "public")));
 app.post("/insert", async (req, res) => {
