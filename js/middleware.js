@@ -1,7 +1,7 @@
 export const createMiddleware = () => {
   return {
     load: async () => {
-      const response = await fetch("/visits");
+      const response = await fetch("/viaggi");
       const json = await response.json();
       return json;
     },

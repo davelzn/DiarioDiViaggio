@@ -37,7 +37,7 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 const server = http.createServer(app);
-const port = 5060;
+const port = 5600;
 server.listen(port, () => {
     console.log("- server running on port: " + port);
 });
