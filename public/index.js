@@ -10,7 +10,3 @@ document.getElementById('openLogin').onclick = () => {
 document.getElementById('btn-close').onclick = () => {
     document.getElementById('loginModal').style.display = 'none';
 };
-
-document.getElementById('btn-close').onclick = () => {
-    document.getElementById('loginModal').style.display = 'none';
-};
