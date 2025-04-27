@@ -47,7 +47,6 @@ document.getElementById('submitViaggio').onclick = () => {
   const data_fine = document.getElementById('data_fine').value;
 
   if (!titolo || !descrizione || !data_inizio || !data_fine) {
-    alert("Compila tutti i campi!");
     return;
   }
 
