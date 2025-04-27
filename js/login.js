@@ -1,6 +1,6 @@
 let myToken, myKey;
 
-fetch('../public/conf.json') // carica le variabili da conf.json
+fetch('conf.json') // carica le variabili da conf.json
     .then(response => {
         if (!response.ok) {
             console.log('Errore nel caricamento del file JSON');
