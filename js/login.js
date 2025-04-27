@@ -46,39 +46,40 @@ fetch('conf.json') // carica le variabili da conf.json
         };
     
         loginButton.onclick = () => {
-            if (isLogged) {
-                loginModal.style.display = "none";
-                document.body.classList.remove('modal-open');
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-                document.getElementById("apriBtn").style.display = 'block';
-                document.getElementById("adminBtn").style.display = 'none';
+    if (isLogged) {
+        loginModal.style.display = "none";
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        document.getElementById("apriBtn").style.display = 'block';
+        document.getElementById("adminBtn").style.display = 'none';
+    }
+    login(inputName.value, inputPassword.value).then(result => {
+        console.log("Login Result:", result); // Log della risposta del server
+        if (result) {
+            isLogged = true;
+            currentUser = inputName.value;
+            console.log("Logged", currentUser);
+            openLoginBtn.innerHTML = currentUser;
+
+            loginModal.style.display = "none";
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
             }
-            login(inputName.value, inputPassword.value).then(result => {
-                if (result) {
-                    isLogged = true;
-                    currentUser = inputName.value;
-                    console.log("Logged", currentUser);
-                        openLoginBtn.innerHTML = currentUser;
-    
-                    loginModal.style.display = "none";
-                    document.body.classList.remove('modal-open');
-                    const backdrop = document.querySelector('.modal-backdrop');
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-                } else {
-                    esitoLog.innerHTML =
-                        '<div class="alert alert-danger">Credenziali Errate!</div>';
-                }
-            }).catch(error => {
-                console.error('Errore durante il login:', error);
-                esitoLog.innerHTML =
-                    '<div class="alert alert-danger">Si è verificato un errore durante il login!</div>';
-            });
-        };
+        } else {
+            esitoLog.innerHTML =
+                '<div class="alert alert-danger">Credenziali Errate!</div>';
+        }
+    }).catch(error => {
+        console.error('Errore durante il login:', error);
+        esitoLog.innerHTML =
+            '<div class="alert alert-danger">Si è verificato un errore durante il login!</div>';
+    });
+};
     
         return {
             isLogged: () => isLogged

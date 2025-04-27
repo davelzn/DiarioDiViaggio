@@ -1,7 +1,5 @@
 import { createLogin } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
-
-
 createLogin();
 
 const viaggiContainer = document.querySelector('.viaggi-container');
@@ -83,17 +81,53 @@ window.deleteViaggio = (id) => {
 function render() {
   viaggiContainer.innerHTML = '';
   viaggiList.forEach(viaggio => {
-    const viaggioDiv = document.createElement('div');
-    viaggioDiv.classList.add('viaggio');
-    viaggioDiv.innerHTML = `
-      <h5>${viaggio.titolo}</h5>
-      <p>${viaggio.descrizione}</p>
-      <p><strong>Dal:</strong> ${viaggio.data_inizio} <strong>al:</strong> ${viaggio.data_fine}</p>
-      <button class="btn btn-danger btn-sm" onclick="deleteViaggio(${viaggio.id_viaggio})">Elimina</button>
+    viaggiContainer.innerHTML += `
+      <div class="viaggio">
+        <h5>${viaggio.titolo}</h5>
+        <p>${viaggio.descrizione}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <div>
+          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
+          <button class="punta btn btn-sm">Punta</button>
+        </div>
+      </div>
     `;
-    viaggiContainer.appendChild(viaggioDiv);
+    console.log(viaggiList)
+    const eliminaBtns = viaggiContainer.querySelectorAll(".elimina_viaggio");
+    eliminaBtns.forEach((btn, index) => {
+      btn.onclick = () => {
+        deleteViaggio(viaggiList[index].id_viaggio);
+      };
+    });
+
+    const puntaBtns = viaggiContainer.querySelectorAll(".punta");
+    puntaBtns.forEach((btn, index) => {
+      btn.onclick = () => {
+        const modal = document.getElementById("myModal");
+        modal.style.display = "block";
+        document.getElementById("titolo_modale_informazioni").innerHTML = viaggiList[index].titolo;
+        document.getElementById("descrizione_modale_informazioni").innerHTML = viaggiList[index].descrizione;
+        document.getElementById("datainizio_modale_informazioni").innerHTML = viaggiList[index].data_inizio.split("T")[0];
+        document.getElementById("datafine_modale_informazioni").innerHTML = viaggiList[index].data_fine.split("T")[0];
+      };
+    });
   });
+
+  const closeModal = document.querySelector(".close");
+  closeModal.onclick = () => {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  };
+
+  window.onclick = (event) => {
+    const modal = document.getElementById("myModal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
 }
+
+
 
 function clearForm() {
   document.getElementById('titolo').value = '';

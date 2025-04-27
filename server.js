@@ -10,7 +10,13 @@ app.use(cors());
 
 database.createTable();
 
+app.use('/js', express.static('js'));
+
 app.use("/", express.static(path.join(__dirname, "public")));
+
+app.post('/api/login', (req, res) => {
+    res.json({ success: true });
+  });
 
 app.post("/insert", async (req, res) => {
     const viaggio = req.body.viaggio;
@@ -29,6 +35,10 @@ app.get("/viaggi", async (req, res) => {
     console.log("Server", list);
     
 });
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+  });
 
 app.delete("/delete/:id", async (req, res) => {
     await database.delete(req.params.id);
