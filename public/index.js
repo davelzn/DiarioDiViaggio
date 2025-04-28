@@ -91,7 +91,6 @@ function render() {
         </div>
       </div>
     `;
-    console.log(viaggiList)
     const eliminaBtns = viaggiContainer.querySelectorAll(".elimina_viaggio");
     eliminaBtns.forEach((btn, index) => {
       btn.onclick = () => {

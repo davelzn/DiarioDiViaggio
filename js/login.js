@@ -10,8 +10,6 @@ fetch('conf.json') // carica le variabili da conf.json
     .then(data => {
         myToken = data.cacheToken;
         myKey = data.myKey;
-        console.log(myKey)
-        console.log(myToken)
     })
     .catch(error => console.error('Errore:', error));
 
