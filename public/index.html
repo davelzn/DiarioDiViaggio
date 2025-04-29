@@ -12,7 +12,7 @@
         <div class="subtitle">Viaggi pubblici</div>
     </header>
     <div id="schermata" class="schermata">
-        <div class="schermata_embrionale">
+        <div class="schermata_embrionale" id="schermata_embrionale">
             <div class="funny_symbol">&</div>
             <div>
                 Accedi al tuo account
@@ -21,27 +21,29 @@
                 accedi per poter postare contenuti, interagire con gli altri utenti e accedere ai tuoi dati personali
             </div>
         </div>
-        <div class="schermata_login">
-            <form>
-                <h5 class="modal-title">LOGIN UTENTE</h5>
+        <div class="schermata_login" id="schermata_login">
+            <div class="container">
                 <label for="user">Username</label>
                 <input id="user" type="text"required />
+                <br></br>
                 <label for="psw">Password</label>
                 <input id="psw" type="password"/>
-            </form>
+            </div>
+            <p>jsjadaisnvdldnldakodnkalòamklsvdm madkcmlòakd mk</p>
+            <p>registrati</p>
         </div>
         <div class="schermata_aggiunta_viaggio">
             <button id="loginBtn" type="button">Accedi</button>
-            <h5 class="modal-title">Aggiungi Nuovo Viaggio</h5>
-            <label for="titolo" class="form-label">Titolo</label>
-            <input id="titolo" type="text" class="form-control" required>
-            <label for="descrizione" class="form-label">Descrizione</label>
+            <h5>Aggiungi Nuovo Viaggio</h5>
+            <label for="titolo">Titolo</label>
+            <input id="titolo" type="text" required>
+            <label for="descrizione">Descrizione</label>
             <textarea id="descrizione" class="form-control" rows="3" required></textarea>
-            <label for="data_inizio" class="form-label">Data Inizio</label>
-            <input id="data_inizio" type="date" class="form-control" required>
-            <label for="data_fine" class="form-label">Data Fine</label>
-            <input id="data_fine" type="date" class="form-control" required>
-            <button id="submitViaggio" class="btn btn-primary">Salva</button>
+            <label for="data_inizio">Data Inizio</label>
+            <input id="data_inizio" type="date" required>
+            <label for="data_fine">Data Fine</label>
+            <input id="data_fine" type="date" required>
+            <button id="submitViaggio">Salva</button>
         </div>
         <div class="schermata_dettaglio_viaggio">
             <span class="close">&times;</span>
@@ -54,15 +56,18 @@
 
         <div class="viaggi-container" style="display:none;"></div>
     </div>
-    <div class="navbar_homepage">
+    <div class="navbar_homepage" id="navbar_homepage">
         <button>home</button>
         <button>favourite</button>
         <button>search</button>
         <button id="openLogin">login</button>
         <button id="openViaggioForm">add</button>
     </div>
-    <div class="navbar_login">
-
+    <div class="navbar_accedi" id="navbar_accedi">
+        accedi
+    </div>
+    <div class="navbar_login" id="navbar_login">
+        <p>login</p>
     </div>
     <script type="module" src="index.js"></script>
 </body>

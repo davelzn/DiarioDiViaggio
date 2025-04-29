@@ -7,6 +7,13 @@ const middleware = createMiddleware();
 let viaggiList = [];
 let isLogged = false;
 
+document.getElementById("navbar_accedi").onclick = () => {
+  document.getElementById("navbar_accedi").style.display = "none";
+  document.getElementById("navbar_login").style.display = "flex";
+  document.getElementById("schermata_embrionale").style.display = "none";
+  document.getElementById("schermata_login").style.display = " flex";
+}
+
 document.getElementById('loginBtn').onclick = () => {
   isLogged = true;
   loadViaggi();

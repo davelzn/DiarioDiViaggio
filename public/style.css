@@ -34,7 +34,7 @@ header {
 
 /* Navbar */
 .navbar_homepage {
-    display: flex;
+    display: none;
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;
@@ -66,6 +66,42 @@ header {
     outline: none;
 }
 
+.navbar_login {
+    display: none;
+    justify-content:space-around;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #777;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    border-top: 1px solid black;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    height: 60px;
+}
+
+.navbar_accedi {
+    display: flex;
+    margin-top: 0 20px;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #777;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    border-top: 1px solid black;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    height: 60px;
+}
+
+
 .hidden {
     display: none;
 }
@@ -76,7 +112,7 @@ header {
   
 .titolo{
     margin-top: 5%;
-    font-size: 50px;
+    font-size: 40px;
   }
 
 .schermata_dettaglio_viaggio{
@@ -84,7 +120,11 @@ header {
 }
 
 .schermata_login{
+    padding: 20px;
     display: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .schermata_aggiunta_viaggio{
@@ -100,4 +140,18 @@ header {
 .funny_symbol{
     margin-top: 30px;
     font-size: 200px;
+}
+p{
+    display: flex;
+}
+
+.container{
+    text-align: center;
+    align-items: center;
+    border-radius: 30px;
+    background-color: #777;
+    height: 80%;
+    width: 80%;
+    padding: 15%;
+    margin: 0 auto;
 }
