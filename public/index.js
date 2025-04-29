@@ -9,7 +9,6 @@ let isLogged = false;
 
 document.getElementById('loginBtn').onclick = () => {
   isLogged = true;
-  document.getElementById('loginModal').style.display = 'none';
   loadViaggi();
 };
 
@@ -26,19 +25,12 @@ document.getElementById('openLogin').onclick = () => {
   document.getElementById('loginModal').style.display = 'block';
 };
 
-document.getElementById('btn-close').onclick = () => {
-  document.getElementById('loginModal').style.display = 'none';
-};
-
 
 document.getElementById('openViaggioForm').onclick = () => {
   if (isLogged) {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
 
-document.getElementById('closeViaggioForm').onclick = () => {
-  document.getElementById('viaggioModal').style.display = 'none';
-};
 
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
@@ -63,7 +55,6 @@ document.getElementById('submitViaggio').onclick = () => {
     .then(res => {
       viaggiList = res;
       render();
-      document.getElementById('viaggioModal').style.display = 'none';
       clearForm();
     });
 };
@@ -111,18 +102,6 @@ function render() {
     });
   });
 
-  const closeModal = document.querySelector(".close");
-  closeModal.onclick = () => {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "none";
-  };
-
-  window.onclick = (event) => {
-    const modal = document.getElementById("myModal");
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  };
 }
 
 
