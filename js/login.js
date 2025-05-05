@@ -10,16 +10,18 @@ fetch('conf.json') // carica le variabili da conf.json
     .then(data => {
         myToken = data.cacheToken;
         myKey = data.myKey;
+        console.log (myToken, myKey);
     })
     .catch(error => console.error('Errore:', error));
 
     export const createLogin = () => {
         const inputName = document.querySelector("#user");
         const inputPassword = document.querySelector("#psw");
-        const loginButton = document.getElementById("loginBtn");
+        const loginButton = document.getElementById("openLogin");
         const esitoLog = document.getElementById("esitoLog");
-        const openLoginBtn = document.getElementById("openLogin"); // bottone in basso a destra
+        //const openLoginBtn = document.getElementById("openLogin"); // bottone in basso a destra
         let isLogged = false;
+        
         let currentUser = "";
     
         const login = (name, password) => {
@@ -44,30 +46,14 @@ fetch('conf.json') // carica le variabili da conf.json
         };
     
         loginButton.onclick = () => {
-    if (isLogged) {
-        loginModal.style.display = "none";
-        document.body.classList.remove('modal-open');
-        const backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.remove();
-        }
-        document.getElementById("apriBtn").style.display = 'block';
-        document.getElementById("adminBtn").style.display = 'none';
-    }
+            console.log("gdvhdgv", inputName, inputPassword);
     login(inputName.value, inputPassword.value).then(result => {
         console.log("Login Result:", result); // Log della risposta del server
         if (result) {
             isLogged = true;
             currentUser = inputName.value;
             console.log("Logged", currentUser);
-            openLoginBtn.innerHTML = currentUser;
-
-            loginModal.style.display = "none";
-            document.body.classList.remove('modal-open');
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
+            //openLoginBtn.innerHTML = currentUser;
         } else {
             esitoLog.innerHTML =
                 '<div class="alert alert-danger">Credenziali Errate!</div>';

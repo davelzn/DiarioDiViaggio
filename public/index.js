@@ -28,11 +28,6 @@ function loadViaggi() {
     });
 }
 
-document.getElementById('openLogin').onclick = () => {
-  document.getElementById('loginModal').style.display = 'block';
-};
-
-
 document.getElementById('openViaggioForm').onclick = () => {
   if (isLogged) {
     document.getElementById('viaggioModal').style.display = 'block';
