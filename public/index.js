@@ -1,11 +1,12 @@
 import { createLogin } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
+let isLogged = false;
 createLogin();
+
 
 const viaggiContainer = document.querySelector('.viaggi-container');
 const middleware = createMiddleware();
 let viaggiList = [];
-let isLogged = false;
 
 document.getElementById("navbar_accedi").onclick = () => {
   document.getElementById("navbar_accedi").style.display = "none";
@@ -14,10 +15,6 @@ document.getElementById("navbar_accedi").onclick = () => {
   document.getElementById("schermata_login").style.display = " block";
 }
 
-document.getElementById('loginBtn').onclick = () => {
-  isLogged = true;
-  loadViaggi();
-};
 document.getElementById("userNavHome").onclick = () => {
   console.log("click user")
   document.getElementById("schermata_home").style.display = 'none';
@@ -25,6 +22,7 @@ document.getElementById("userNavHome").onclick = () => {
 }
 document.getElementById("homeNavHome").onclick = () => {
   console.log("click home")
+  loadViaggi()
   document.getElementById("schermata_home").style.display = 'block';
   document.getElementById("schermata_dash").style.display = 'none';
 }

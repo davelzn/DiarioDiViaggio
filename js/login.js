@@ -18,7 +18,7 @@ fetch('conf.json') // carica le variabili da conf.json
         const inputName = document.querySelector("#user");
         const inputPassword = document.querySelector("#psw");
         const loginButton = document.getElementById("openLogin");
-        const esitoLog = document.getElementById("esitoLog");
+        const esitoLog = document.getElementById("schermata_home");
         //const openLoginBtn = document.getElementById("openLogin"); // bottone in basso a destra
         let isLogged = false;
         
@@ -54,7 +54,7 @@ fetch('conf.json') // carica le variabili da conf.json
             currentUser = inputName.value;
             console.log("Logged", currentUser);
             document.getElementById("schermata_login").style.display = 'none';
-            document.getElementById("schermata_home").style.display = 'block';
+            document.getElementById("schermata_dash").style.display = 'block';
             document.getElementById("navbar_login").style.display = 'none';
             document.getElementById("userNavHome").innerHTML = currentUser
             document.getElementById("navbar_homepage").style.display = 'block';
