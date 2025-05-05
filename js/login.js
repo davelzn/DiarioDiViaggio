@@ -55,6 +55,9 @@ fetch('conf.json') // carica le variabili da conf.json
             console.log("Logged", currentUser);
             document.getElementById("schermata_login").style.display = 'none';
             document.getElementById("schermata_home").style.display = 'block';
+            document.getElementById("navbar_login").style.display = 'none';
+            document.getElementById("userNavHome").innerHTML = currentUser
+            document.getElementById("navbar_homepage").style.display = 'block';
 
             //openLoginBtn.innerHTML = currentUser;
         } else {

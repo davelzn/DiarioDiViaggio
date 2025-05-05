@@ -11,13 +11,18 @@ document.getElementById("navbar_accedi").onclick = () => {
   document.getElementById("navbar_accedi").style.display = "none";
   document.getElementById("navbar_login").style.display = "flex";
   document.getElementById("schermata_embrionale").style.display = "none";
-  document.getElementById("schermata_login").style.display = " flex";
+  document.getElementById("schermata_login").style.display = " block";
 }
 
 document.getElementById('loginBtn').onclick = () => {
   isLogged = true;
   loadViaggi();
 };
+document.getElementById("userNavHome").onclick = () => {
+  console.log("click user")
+  document.getElementById("schermata_home").style.display = 'none';
+  document.getElementById("schermata_dash").style.display = 'block';
+}
 
 function loadViaggi() {
   middleware.load()
@@ -28,10 +33,12 @@ function loadViaggi() {
     });
 }
 
+/*
 document.getElementById('openViaggioForm').onclick = () => {
   if (isLogged) {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
+  */
 
 
 document.getElementById('submitViaggio').onclick = () => {

@@ -121,6 +121,9 @@ header {
 .schermata_home{
     display: none;
 }
+.schermata_dash {
+    display: none;
+}
 
 .schermata_login{
     padding: 20px;
