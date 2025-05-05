@@ -23,6 +23,11 @@ document.getElementById("userNavHome").onclick = () => {
   document.getElementById("schermata_home").style.display = 'none';
   document.getElementById("schermata_dash").style.display = 'block';
 }
+document.getElementById("homeNavHome").onclick = () => {
+  console.log("click home")
+  document.getElementById("schermata_home").style.display = 'block';
+  document.getElementById("schermata_dash").style.display = 'none';
+}
 
 function loadViaggi() {
   middleware.load()
