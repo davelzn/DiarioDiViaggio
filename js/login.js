@@ -46,13 +46,16 @@ fetch('conf.json') // carica le variabili da conf.json
         };
     
         loginButton.onclick = () => {
-            console.log("gdvhdgv", inputName, inputPassword);
+            //console.log("gdvhdgv", inputName, inputPassword);
     login(inputName.value, inputPassword.value).then(result => {
         console.log("Login Result:", result); // Log della risposta del server
         if (result) {
             isLogged = true;
             currentUser = inputName.value;
             console.log("Logged", currentUser);
+            document.getElementById("schermata_login").style.display = 'none';
+            document.getElementById("schermata_home").style.display = 'block';
+
             //openLoginBtn.innerHTML = currentUser;
         } else {
             esitoLog.innerHTML =

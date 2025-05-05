@@ -118,6 +118,9 @@ header {
 .schermata_dettaglio_viaggio{
     display: none;
 }
+.schermata_home{
+    display: none;
+}
 
 .schermata_login{
     padding: 20px;
