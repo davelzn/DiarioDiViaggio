@@ -44,7 +44,7 @@ const database = {
             )
         `);
 
-        console.log('Tabelle create ✅');
+        //console.log('Tabelle create ✅');
     },
 
     registerUser: async (username, password, email) => {

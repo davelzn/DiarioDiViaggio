@@ -1,5 +1,16 @@
 import { createLogin } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
+const navAccedi = document.getElementById("navbar_accedi")
+const navLogin = document.getElementById("navbar_login")
+const navReg = document.getElementById("navbar_reg")
+const schEmbr = document.getElementById("schermata_embrionale");
+const schLog = document.getElementById("schermata_login");
+const schHome = document.getElementById("schermata_home");
+const schDash = document.getElementById("schermata_dash");
+const schReg = document.getElementById("schermata_reg");
+const userHomeBtn = document.getElementById("userNavHome");
+const homeNavBtn = document.getElementById("homeNavHome");
+const regBtn = document.getElementById("regBtn");
 let isLogged = false;
 createLogin();
 
@@ -8,23 +19,29 @@ const viaggiContainer = document.querySelector('.viaggi-container');
 const middleware = createMiddleware();
 let viaggiList = [];
 
-document.getElementById("navbar_accedi").onclick = () => {
-  document.getElementById("navbar_accedi").style.display = "none";
-  document.getElementById("navbar_login").style.display = "flex";
-  document.getElementById("schermata_embrionale").style.display = "none";
-  document.getElementById("schermata_login").style.display = " block";
+navAccedi.onclick = () => {
+  navAccedi.style.display = "none";
+  navLogin.style.display = "flex";
+  schEmbr.style.display = "none";
+  schLog.style.display = " block";
 }
-
-document.getElementById("userNavHome").onclick = () => {
+userHomeBtn.onclick = () => {
   console.log("click user")
-  document.getElementById("schermata_home").style.display = 'none';
-  document.getElementById("schermata_dash").style.display = 'block';
+  schHome.style.display = 'none';
+  schDash.style.display = 'block';
 }
-document.getElementById("homeNavHome").onclick = () => {
+homeNavBtn.onclick = () => {
   console.log("click home")
   loadViaggi()
-  document.getElementById("schermata_home").style.display = 'block';
-  document.getElementById("schermata_dash").style.display = 'none';
+  schHome.style.display = 'block';
+  schDash.style.display = 'none';
+}
+regBtn.onclick = () => {
+  console.log("click reg")
+  schReg.style.display = 'block';
+  schLog.style.display = 'none';
+  navLogin.style.display = 'none';
+  navReg.style.display = 'block';
 }
 
 function loadViaggi() {

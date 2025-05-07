@@ -30,7 +30,22 @@
                 <input id="psw" type="password"/>
             </div>
             <p>se non hai ancora effettuato l'accesso</p>
-            <p>registrati</p>
+            <p id="regBtn">registrati</p>
+        </div>
+        <!-- REGISTER -->
+        <div class="schermata_login" id="schermata_reg">
+            <div class="container">
+                <label for="email">Email</label>
+                <input id="email" type="email"required />
+                <br></br>
+                <label for="userR">Username</label>
+                <input id="userR" type="text"required />
+                <br></br>
+                <label for="pswR">Password</label>
+                <input id="pswR" type="password"/>
+            </div>
+            <p>Hai già un account?</p>
+            <p>Accedi</p>
         </div>
         <div class="schermata_home" id = "schermata_home">
             <div class="viaggi-container" id="viaggi_container" style="display:none;"></div>
@@ -75,6 +90,11 @@
     <div class="navbar_login" id="navbar_login">
         <div id="openLogin">
         <p>login</p>
+        </div>
+    </div>
+    <div class="navbar_login" id="navbar_reg">
+        <div id="openReg">
+        <p>Registrati</p>
         </div>
     </div>
     <script type="module" src="index.js"></script>
