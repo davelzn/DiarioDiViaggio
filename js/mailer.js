@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const conf = require("../public/conf.json");
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtp.ionos.it",
     port: 587,
     secure: false,
     logger: false,
@@ -25,7 +25,7 @@ const result = {
     send: async (email, subject, text) => {
         try {
             return await transporter.sendMail({
-                from: conf.from,
+                from: conf.mailFrom,
                 to: email,
                 subject: subject,
                 text: text

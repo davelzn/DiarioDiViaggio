@@ -11,6 +11,7 @@ const schReg = document.getElementById("schermata_reg");
 const userHomeBtn = document.getElementById("userNavHome");
 const homeNavBtn = document.getElementById("homeNavHome");
 const regBtn = document.getElementById("regBtn");
+const sendReg = document.getElementById("sendReg")
 let isLogged = false;
 createLogin();
 
@@ -42,6 +43,30 @@ regBtn.onclick = () => {
   schLog.style.display = 'none';
   navLogin.style.display = 'none';
   navReg.style.display = 'block';
+}
+sendReg.onclick = async () => {
+  const email = document.getElementById("email").value;
+  const username = document.getElementById("userR").value;
+  const password = document.getElementById("pswR").value;
+
+  if (!email || !username || !password) {
+    alert("Compila tutti i campi");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, username, password }),
+    });
+
+    const data = await res.json();
+    alert(data.message);
+  } catch (err) {
+    alert("Errore nella registrazione");
+    console.error(err);
+  }
 }
 
 function loadViaggi() {
