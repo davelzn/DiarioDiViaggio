@@ -11,7 +11,7 @@ const schReg = document.getElementById("schermata_reg");
 const userHomeBtn = document.getElementById("userNavHome");
 const homeNavBtn = document.getElementById("homeNavHome");
 const regBtn = document.getElementById("regBtn");
-const sendReg = document.getElementById("sendReg")
+const sendReg = document.getElementById("sendReg");
 let isLogged = false;
 createLogin();
 
@@ -158,6 +158,75 @@ function render() {
 
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const addTripBtn = document.getElementById('addTrip');
+  const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
+  const submitViaggioBtn = document.getElementById('submitViaggio');
+
+  if (addTripBtn) {
+      console.log('addTripBtn trovato');
+      addTripBtn.onclick = () => {
+          console.log('Pulsante cliccato');
+          if (schermataAggiuntaViaggio) {
+              console.log('schermata_aggiunta_viaggio trovata');
+              schermataAggiuntaViaggio.style.display = "block"; 
+          } else {
+              console.log('schermata_aggiunta_viaggio NON trovato');
+          }
+      };
+  } else {
+      console.log('addTripBtn NON trovato');
+  }
+
+  if (submitViaggioBtn) {
+      submitViaggioBtn.onclick = () => {
+          const titolo = document.getElementById("titolo").value;
+          const descrizione = document.getElementById("descrizione").value;
+          const dataInizio = document.getElementById("data_inizio").value;
+          const dataFine = document.getElementById("data_fine").value;
+
+          if (!titolo || !descrizione || !dataInizio || !dataFine) {
+              alert("Tutti i campi sono obbligatori!");
+              return;
+          }
+
+          const durata = calculateDurata(dataInizio, dataFine);
+
+          const nuovoViaggio = {
+              titolo: titolo,
+              descrizione: descrizione,
+              data_inizio: dataInizio,
+              data_fine: dataFine,
+              durata: durata
+          };
+
+          fetch("https://ws.cipiaceinfo.it/diario/create", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "key": "7e1bdc72-9efc-4588-b534-372a7c50e96a"
+              },
+              body: JSON.stringify({
+                  viaggio: nuovoViaggio
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.result === 'ok') {
+                  alert("Viaggio aggiunto con successo!");
+                  loadViaggi();
+                  schermataAggiuntaViaggio.style.display = "none"; 
+              } else {
+                  alert("Errore nell'aggiungere il viaggio");
+              }
+          })
+          .catch(err => {
+              console.error("Errore:", err);
+              alert("Errore durante la comunicazione con il server");
+          });
+      };
+  }
+});
 
 
 function clearForm() {
