@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const cors = require("cors");
+const mailer = require("./js/mailer.js")
 const database = require("./js/database");
 
 const app = express();
@@ -28,6 +29,29 @@ app.post("/insert", async (req, res) => {
         res.status(500).json({ result: "ko" });
     }
 });
+app.post('/api/register', async (req, res) => {
+    const { username, password, email } = req.body;
+
+    if (!username || !password || !email) {
+        return res.status(400).json({ message: "❌ Dati mancanti" });
+    }
+
+    try {
+        const result = await database.registerUser(username, password, email);
+        
+        if (result.exists) {
+            return res.status(409).json({ message: "⚠️ Utente già esistente" });
+        }
+
+        await mailer.send(email, "Benvenuto su Nidamato! 🎉", `Ciao ${username}, grazie per esserti registrato!`);
+
+        res.status(201).json({ message: "✅ Registrazione completata" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "❌ Errore server" });
+    }
+});
+
 
 app.get("/viaggi", async (req, res) => {
     const list = await database.select();
