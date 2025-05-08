@@ -72,7 +72,8 @@ fetch('conf.json') // carica le variabili da conf.json
 };
     
         return {
-            isLogged: () => isLogged
+            isLogged: () => isLogged,
+            currentUser: () => currentUser
         };
     };
     

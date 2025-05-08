@@ -4,9 +4,10 @@ const path = require("path");
 const cors = require("cors");
 const mailer = require("./js/mailer.js")
 const database = require("./js/database");
-
 const app = express();
+
 app.use(express.json());
+
 app.use(cors());
 
 database.createTable();
@@ -19,16 +20,28 @@ app.post('/api/login', (req, res) => {
     res.json({ success: true });
   });
 
-app.post("/insert", async (req, res) => {
+app.post("/insert/viaggi", async (req, res) => {
     const viaggio = req.body.viaggio;
     try {
         await database.insert(viaggio);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
-        res.status(500).json({ result: "ko" });
+        res.status(500).json({ result: "ok" });
     }
 });
+
+app.post("/insert/tappe", async (req, res) => {
+    const tappa = req.body.tappa;
+    try {
+        await database.insert(tappa);
+        res.json({ result: "ok" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ result: "ok" })
+    }
+})
+
 app.post('/api/register', async (req, res) => {
     const { username, password, email } = req.body;
 
@@ -60,11 +73,17 @@ app.get("/viaggi", async (req, res) => {
     
 });
 
+app.get("/tappe", async (req, res) => {
+    const list = await database.select();
+    res.json(list);
+    console.log("server", list)
+})
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 
-app.delete("/delete/:id", async (req, res) => {
+app.delete_tappa("/delete/:id", async (req, res) => {
     await database.delete(req.params.id);
     res.json({ result: "ok" });
    

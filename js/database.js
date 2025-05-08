@@ -40,10 +40,23 @@ const database = {
                 descrizione TEXT,
                 data_inizio DATE,
                 data_fine DATE,
-                id_utente INT
+                id_utente INT,
+                FOREIGN KEY (id_utente) REFERENCES utenti(id),
+                stato BOOLEAN
             )
         `);
-
+        await executeQuery(`
+            CREATE TABLE IF NOT EXISTS Tappa (
+                id_tappa INT PRIMARY KEY AUTO_INCREMENT,
+                titolo VARCHAR(100),
+                descrizione TEXT,
+                data DATE,
+                id_viaggio INT,
+                id_utente INT,
+                FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
+                FOREIGN KEY (id_utente) REFERENCES utente(id_utente)
+            )
+        `);
         //console.log('Tabelle create ✅');
     },
 
@@ -113,6 +126,12 @@ const database = {
     delete: (id) => {
         let sql = `
             DELETE FROM viaggio WHERE id_viaggio = ?
+        `;
+        return executeQuery(sql, [id]);
+    },
+    delete_tappa: (id) => {
+        let sql = `
+            DELETE FROM tappa WHERE id_tappa = ?
         `;
         return executeQuery(sql, [id]);
     }

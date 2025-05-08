@@ -8,10 +8,13 @@ const schLog = document.getElementById("schermata_login");
 const schHome = document.getElementById("schermata_home");
 const schDash = document.getElementById("schermata_dash");
 const schReg = document.getElementById("schermata_reg");
+const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
 const userHomeBtn = document.getElementById("userNavHome");
 const homeNavBtn = document.getElementById("homeNavHome");
 const regBtn = document.getElementById("regBtn");
 const sendReg = document.getElementById("sendReg");
+const addTripBtn = document.getElementById("addTrip");
+const posizione = 'it-IT';
 let isLogged = false;
 createLogin();
 
@@ -19,6 +22,7 @@ createLogin();
 const viaggiContainer = document.querySelector('.viaggi-container');
 const middleware = createMiddleware();
 let viaggiList = [];
+let tappeList = [];
 
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
@@ -35,6 +39,7 @@ homeNavBtn.onclick = () => {
   console.log("click home")
   loadViaggi()
   schHome.style.display = 'block';
+  schermataAggiuntaViaggio.style.display = "none";
   schDash.style.display = 'none';
 }
 regBtn.onclick = () => {
@@ -43,6 +48,10 @@ regBtn.onclick = () => {
   schLog.style.display = 'none';
   navLogin.style.display = 'none';
   navReg.style.display = 'block';
+}
+
+addTripBtn.onclick = () => {
+  schermataAggiuntaViaggio.style.display = "block"
 }
 sendReg.onclick = async () => {
   const email = document.getElementById("email").value;
@@ -73,6 +82,7 @@ function loadViaggi() {
   middleware.load()
     .then(res => {
       viaggiList = res;
+      console.log(viaggiList)
       render();
       viaggiContainer.style.display = 'block';
     });
@@ -89,9 +99,9 @@ document.getElementById('openViaggioForm').onclick = () => {
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;
-  const data_inizio = document.getElementById('data_inizio').value;
-  const data_fine = document.getElementById('data_fine').value;
-
+  const data_inizio = new Date().toLocaleDateString(posizione);
+  let finito = false;
+  id_utente = currentUser;
   if (!titolo || !descrizione || !data_inizio || !data_fine) {
     return;
   }
@@ -101,13 +111,38 @@ document.getElementById('submitViaggio').onclick = () => {
     descrizione,
     data_inizio,
     data_fine,
-    id_utente: 1
+    finito,
+    id_utente
   };
 
   middleware.add(nuovoViaggio)
     .then(() => middleware.load())
     .then(res => {
       viaggiList = res;
+      render();
+      clearForm();
+    });
+};
+
+document.getElementById('submitTappa').onclick = () => {
+  const titolo = document.getElementById('titolo').value;
+  const descrizione = document.getElementById('descrizione').value;
+  const data = document.getElementById('data').value;
+  if (!titolo || !descrizione || !data_inizio || !data_fine) {
+    return;
+  }
+
+  const nuovoTappa = {
+    titolo,
+    descrizione,
+    data,
+    id_viaggio: 1
+  };
+
+  middleware.add_tappa(nuovoTappa)
+    .then(() => middleware.load())
+    .then(res => {
+      tappeList = res;
       render();
       clearForm();
     });
@@ -122,6 +157,15 @@ window.deleteViaggio = (id) => {
     });
 };
 
+window.deleteTappa = (id) => {
+  middleware.delete_Tappa(id)
+  .then(() => middleware.load_tappe())
+  .then(res => {
+    tappeList = res;
+    render();
+  });
+};
+
 function render() {
   viaggiContainer.innerHTML = '';
   viaggiList.forEach(viaggio => {
@@ -132,7 +176,6 @@ function render() {
         <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
         <div>
           <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
-          <button class="punta btn btn-sm">Punta</button>
         </div>
       </div>
     `;
@@ -142,85 +185,9 @@ function render() {
         deleteViaggio(viaggiList[index].id_viaggio);
       };
     });
-
-    const puntaBtns = viaggiContainer.querySelectorAll(".punta");
-    puntaBtns.forEach((btn, index) => {
-      btn.onclick = () => {
-        const modal = document.getElementById("myModal");
-        modal.style.display = "block";
-        document.getElementById("titolo_modale_informazioni").innerHTML = viaggiList[index].titolo;
-        document.getElementById("descrizione_modale_informazioni").innerHTML = viaggiList[index].descrizione;
-        document.getElementById("datainizio_modale_informazioni").innerHTML = viaggiList[index].data_inizio.split("T")[0];
-        document.getElementById("datafine_modale_informazioni").innerHTML = viaggiList[index].data_fine.split("T")[0];
-      };
-    });
   });
 
 }
-
-const addTripBtn = document.getElementById('addTrip');
-const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
-const submitViaggioBtn = document.getElementById('submitViaggio');
-const titoloInput = document.getElementById("titolo");
-const descrizioneInput = document.getElementById("descrizione");
-const dataInizioInput = document.getElementById("data_inizio");
-const dataFineInput = document.getElementById("data_fine");
-
-if (addTripBtn) {
-    addTripBtn.onclick = () => {
-        schermataAggiuntaViaggio.style.display = "block";
-    };
-}
-
-if (submitViaggioBtn) {
-    submitViaggioBtn.onclick = () => {
-        const titolo = titoloInput.value;
-        const descrizione = descrizioneInput.value;
-        const dataInizio = dataInizioInput.value;
-        const dataFine = dataFineInput.value;
-
-        if (!titolo || !descrizione || !dataInizio || !dataFine) {
-            alert("Tutti i campi sono obbligatori!");
-            return;
-        }
-
-        const durata = (new Date(dataFine) - new Date(dataInizio)) / (1000 * 3600 * 24);
-
-        const nuovoViaggio = {
-            titolo: titolo,
-            descrizione: descrizione,
-            data_inizio: dataInizio,
-            data_fine: dataFine,
-            durata: durata
-        };
-
-        fetch("https://ws.cipiaceinfo.it/diario/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "key": "7e1bdc72-9efc-4588-b534-372a7c50e96a"
-            },
-            body: JSON.stringify({
-                viaggio: nuovoViaggio
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result === 'ok') {
-                alert("Viaggio aggiunto con successo!");
-                loadViaggi();
-                schermataAggiuntaViaggio.style.display = "none";
-            } else {
-                alert("Errore nell'aggiungere il viaggio");
-            }
-        })
-        .catch(err => {
-            console.error("Errore:", err);
-            alert("Errore durante la comunicazione con il server");
-        });
-    };
-}
-
 
 
 function clearForm() {

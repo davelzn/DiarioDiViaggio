@@ -51,8 +51,8 @@
             <div class="viaggi-container" id="viaggi_container" style="display:none;"></div>
         </div>
         <div class="schermata_dash" id = "schermata_dash">
-            <p>DASHBOARD</p>
-            <button id="addTrip">Aggiungi nuovo viaggio</button>
+            <p>DASHBOARD<button id="addTrip">+</button></p>
+            
         </div>
         <div class="schermata_aggiunta_viaggio" id="schermata_aggiunta_viaggio" style="display:none;">
             <h5>Aggiungi Nuovo Viaggio</h5>
@@ -60,10 +60,6 @@
             <input id="titolo" type="text" required>
             <label for="descrizione">Descrizione</label>
             <textarea id="descrizione" class="form-control" rows="3" required></textarea>
-            <label for="data_inizio">Data Inizio</label>
-            <input id="data_inizio" type="date" required>
-            <label for="data_fine">Data Fine</label>
-            <input id="data_fine" type="date" required>
             <button id="submitViaggio">Salva</button>
         </div>
         <div class="schermata_dettaglio_viaggio">
@@ -95,6 +91,7 @@
             <p id="sendReg">Registrati</p>
         </div>
     </div>
+    <div id="submitTappa"></div>
     <script type="module" src="index.js"></script>
 </body>
 </html>
