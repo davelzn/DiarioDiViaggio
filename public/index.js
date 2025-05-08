@@ -6,20 +6,26 @@ const navReg = document.getElementById("navbar_reg")
 const schEmbr = document.getElementById("schermata_embrionale");
 const schLog = document.getElementById("schermata_login");
 const schHome = document.getElementById("schermata_home");
+const schSearch = document.getElementById("schermata_search")
 const schDash = document.getElementById("schermata_dash");
 const schReg = document.getElementById("schermata_reg");
 const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
 const userHomeBtn = document.getElementById("userNavHome");
 const homeNavBtn = document.getElementById("homeNavHome");
+const preferitiNavBtn = document.getElementById("preferitiNavHome");
+const searchNavBtn = document.getElementById("searchNavHome");
+const searchText = document.getElementById('searchInput').value.toLowerCase();
 const regBtn = document.getElementById("regBtn");
 const sendReg = document.getElementById("sendReg");
 const addTripBtn = document.getElementById("addTrip");
+const searchTripBtn = document.getElementById("searchTrip");
 const posizione = 'it-IT';
 let isLogged = false;
 createLogin();
 
 
 const viaggiContainer = document.querySelector('.viaggi-container');
+const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
 const middleware = createMiddleware();
 let viaggiList = [];
 let tappeList = [];
@@ -34,12 +40,30 @@ userHomeBtn.onclick = () => {
   console.log("click user")
   schHome.style.display = 'none';
   schDash.style.display = 'block';
+  schSearch.style.display = 'none';
 }
 homeNavBtn.onclick = () => {
   console.log("click home")
   loadViaggi()
   schHome.style.display = 'block';
   schermataAggiuntaViaggio.style.display = "none";
+  schDash.style.display = 'none';
+  schSearch.style.display = 'none';
+}
+preferitiNavBtn.onclick = () => {
+  console.log("click preferiti")
+  loadViaggi()
+  schHome.style.display = 'block';
+  schermataAggiuntaViaggio.style.display = "none";
+  schDash.style.display = 'none';
+  schSearch.style.display = 'none';
+}
+searchNavBtn.onclick = () => {
+  console.log("click search")
+  loadFiltrati()
+  schSearch.style.display = 'block';
+  schermataAggiuntaViaggio.style.display = "none";
+  schHome.style.display = 'none'
   schDash.style.display = 'none';
 }
 regBtn.onclick = () => {
@@ -52,6 +76,10 @@ regBtn.onclick = () => {
 
 addTripBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = "block"
+}
+searchTripBtn.onclick = () => {
+  const searchText = document.getElementById('searchInput').value.toLowerCase();
+  loadFiltrati(searchText)
 }
 sendReg.onclick = async () => {
   const email = document.getElementById("email").value;
@@ -85,6 +113,23 @@ function loadViaggi() {
       console.log(viaggiList)
       render();
       viaggiContainer.style.display = 'block';
+    });
+}
+
+function loadFiltrati(searchText) {
+  middleware.load()
+    .then(res => {
+      viaggiList = res;
+      const viaggiFiltrati = [];
+      for (let i = 0; i < viaggiList.length; i++) {
+        const viaggio = viaggiList[i];
+        if (viaggio.titolo.toLowerCase().includes(searchText)) {
+          viaggiFiltrati.push(viaggio);
+        }
+      }
+      console.log(viaggiFiltrati)
+      render_filtrati(viaggiFiltrati);
+      viaggiFiltratiContainer.style.display = 'block';
     });
 }
 
@@ -166,6 +211,7 @@ window.deleteTappa = (id) => {
   });
 };
 
+
 function render() {
   viaggiContainer.innerHTML = '';
   viaggiList.forEach(viaggio => {
@@ -188,7 +234,28 @@ function render() {
   });
 
 }
+function render_filtrati(viaggiFiltrati) {
+  viaggiFiltratiContainer.innerHTML = '';
+  viaggiFiltrati.forEach(viaggio => {
+    viaggiFiltratiContainer.innerHTML += `
+      <div class="viaggio">
+        <h5>${viaggio.titolo}</h5>
+        <p>${viaggio.descrizione}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <div>
+          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
+        </div>
+      </div>
+    `;
+    const eliminaBtns = viaggiFiltratiContainer.querySelectorAll(".elimina_viaggio");
+    eliminaBtns.forEach((btn, index) => {
+      btn.onclick = () => {
+        deleteViaggio(viaggiList[index].id_viaggio);
+      };
+    });
+  });
 
+}
 
 function clearForm() {
   document.getElementById('titolo').value = '';

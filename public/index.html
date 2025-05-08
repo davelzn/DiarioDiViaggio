@@ -54,6 +54,13 @@
             <p>DASHBOARD<button id="addTrip">+</button></p>
             
         </div>
+        <div class="schermata_search" id = "schermata_search">
+            <div class="container">
+                <input type="text" id="searchInput" placeholder="Cerca un viaggio...">
+                <button id="searchTrip">🔍</button>
+                <div class="viaggi-filtrati-container" id="viaggi_filtrati_container" style="display:none;"></div>
+            </div>
+        </div>
         <div class="schermata_aggiunta_viaggio" id="schermata_aggiunta_viaggio" style="display:none;">
             <h5>Aggiungi Nuovo Viaggio</h5>
             <label for="titolo">Titolo</label>
@@ -74,8 +81,8 @@
     <!-- NAVBAR -->
     <div class="navbar_homepage" id="navbar_homepage">
         <button id="homeNavHome">🏠</button>
-        <button>❤️</button>
-        <button>🔍</button>
+        <button id="preferitiNavHome">❤️</button>
+        <button id="searchNavHome">🔍</button>
         <button id="userNavHome"></button>
     </div>
     <div class="navbar_accedi" id="navbar_accedi">

@@ -134,6 +134,7 @@ header {
 /* Schermate */
 .schermata_dettaglio_viaggio,
 .schermata_home,
+.schermata_search,
 .schermata_dash,
 .schermata_aggiunta_viaggio {
     text-align: center;
@@ -237,6 +238,12 @@ textarea {
 
 /* Lista viaggi */
 .viaggi-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 80px;
+}
+.viaggi-filtrati-container {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
