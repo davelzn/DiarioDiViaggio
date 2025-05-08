@@ -83,7 +83,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 
-app.delete_tappa("/delete/:id", async (req, res) => {
+app.delete("/delete/:id", async (req, res) => {
     await database.delete(req.params.id);
     res.json({ result: "ok" });
    

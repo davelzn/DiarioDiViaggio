@@ -25,14 +25,14 @@ const executeQuery = (sql, par = []) => {
 const database = {
     createTable: async () => {
         await executeQuery(`
-            CREATE TABLE IF NOT EXISTS utenti (
+            CREATE TABLE IF NOT EXISTS utente (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 username VARCHAR(100) UNIQUE,
                 password VARCHAR(100),
                 email VARCHAR(255) UNIQUE
             )
         `);
-
+        
         await executeQuery(`
             CREATE TABLE IF NOT EXISTS viaggio (
                 id_viaggio INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,10 +41,11 @@ const database = {
                 data_inizio DATE,
                 data_fine DATE,
                 id_utente INT,
-                FOREIGN KEY (id_utente) REFERENCES utenti(id),
-                stato BOOLEAN
+                stato BOOLEAN,
+                FOREIGN KEY (id_utente) REFERENCES utente(id)
             )
         `);
+        
         await executeQuery(`
             CREATE TABLE IF NOT EXISTS Tappa (
                 id_tappa INT PRIMARY KEY AUTO_INCREMENT,
@@ -54,7 +55,7 @@ const database = {
                 id_viaggio INT,
                 id_utente INT,
                 FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
-                FOREIGN KEY (id_utente) REFERENCES utente(id_utente)
+                FOREIGN KEY (id_utente) REFERENCES utente(id)
             )
         `);
         //console.log('Tabelle create ✅');
