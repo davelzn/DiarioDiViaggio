@@ -6,11 +6,11 @@ const mailer = require("./js/mailer.js")
 const database = require("./js/database");
 const app = express();
 
+database.createTable_viaggio();
+
 app.use(express.json());
 
 app.use(cors());
-
-database.createTable_viaggio();
 
 app.use('/js', express.static('js'));
 
@@ -20,10 +20,10 @@ app.post('/api/login', (req, res) => {
     res.json({ success: true });
   });
 
-app.post("/insert/viaggi", async (req, res) => {
+app.post("/insert/viaggio", async (req, res) => {
     const viaggio = req.body.viaggio;
     try {
-        await database.insert(viaggio);
+        await database.insert_viaggio(viaggio);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
@@ -40,41 +40,51 @@ app.post("/insert/tappe", async (req, res) => {
         console.error(e);
         res.status(500).json({ result: "ok" })
     }
-})
+});
 
-app.post('/api/register', async (req, res) => {
-    const { username, password, email } = req.body;
-
-    if (!username || !password || !email) {
-        return res.status(400).json({ message: "❌ Dati mancanti" });
-    }
-
+app.post("/insert/preferiti", async (req, res) => {
+    const preferito = req.body.preferito;
     try {
-        const result = await database.registerUser(username, password, email);
-        
-        if (result.exists) {
-            return res.status(409).json({ message: "⚠️ Utente già esistente" });
-        }
-
-        await mailer.send(email, "Benvenuto su Nidamato! 🎉", `Ciao ${username}, grazie per esserti registrato!`);
-
-        res.status(201).json({ message: "✅ Registrazione completata" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "❌ Errore server" });
+        await database.insert(preferito);
+        res.json({ result: "ok" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ result: "ok" })
+    }
+});
+app.post("/insert/utenti", async (req, res) => {
+    const utente = req.body.preferito;
+    try {
+        await database.insert(utente);
+        res.json({ result: "ok" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ result: "ok" })
     }
 });
 
 
 app.get("/viaggi", async (req, res) => {
-    const list = await database.select();
+    const list = await database.select_viaggi();
     res.json(list);
     console.log("Server", list);
     
 });
 
 app.get("/tappe", async (req, res) => {
-    const list = await database.select();
+    const list = await database.select_tappe();
+    res.json(list);
+    console.log("server", list)
+})
+
+app.get("/preferiti", async (req, res) => {
+    const list = await database.select_preferiti();
+    res.json(list);
+    console.log("server", list)
+})
+
+app.get("/utenti", async (req, res) => {
+    const list = await database.select_utenti();
     res.json(list);
     console.log("server", list)
 })

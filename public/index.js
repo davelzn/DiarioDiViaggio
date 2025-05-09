@@ -1,5 +1,6 @@
 import { createLogin } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
+let currentUser;
 const navAccedi = document.getElementById("navbar_accedi")
 const navLogin = document.getElementById("navbar_login")
 const navReg = document.getElementById("navbar_reg")
@@ -22,13 +23,15 @@ const searchTripBtn = document.getElementById("searchTrip");
 const posizione = 'it-IT';
 let isLogged = false;
 createLogin();
-
+const middleware = createMiddleware();
+load();
 
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
-const middleware = createMiddleware();
 let viaggiList = [];
 let tappeList = [];
+let utentiList = [];
+let preferitiList = [];
 
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
@@ -44,7 +47,6 @@ userHomeBtn.onclick = () => {
   schSearch.style.display = 'none';
 }
 homeNavBtn.onclick = () => {
-  loadViaggi()
   console.log("click home")
   document.getElementById("schermata_conferma_login").style.display = "none"
   schHome.style.display = 'block';
@@ -55,11 +57,9 @@ homeNavBtn.onclick = () => {
 
 document.getElementById("ok_acceduto").onclick = () => {
   document.getElementById("schermata_conferma_login").style.display = "none"
-  let currentUser;
   currentUser = document.getElementById("userNavHome").value;
   console.log(currentUser)
   schDash.style.display = 'block';
-  loadViaggi()
 }
 
 preferitiNavBtn.onclick = () => {
@@ -117,7 +117,7 @@ sendReg.onclick = async () => {
   }
 }
 
-function loadViaggi() {
+function load() {
   middleware.load_viaggi()
     .then(res => {
       viaggiList = res;
@@ -125,6 +125,21 @@ function loadViaggi() {
       render();
       viaggiContainer.style.display = 'block';
     });
+  middleware.load_preferiti()
+  .then(res => {
+    preferitiList = res;
+    console.log(preferitiList)
+  })
+  middleware.load_tappe()
+  .then(res => {
+    tappeList = res;
+    console.log(tappeList)
+  })
+  middleware.load_utenti()
+  .then(res => {
+    utentiList = res;
+    console.log(utentiList)
+  })
 }
 
 function loadFiltrati(searchText) {
@@ -144,6 +159,10 @@ function loadFiltrati(searchText) {
     });
 }
 
+function aggiungi_viaggio(titolo,descrizione,data_inizio,data_fine){
+  
+}
+
 /*
 document.getElementById('openViaggioForm').onclick = () => {
   if (isLogged) {
@@ -155,10 +174,17 @@ document.getElementById('openViaggioForm').onclick = () => {
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;
-  const data_inizio = new Date().toLocaleDateString(posizione);
+  const data_inizio = "2000/10/10"
   let finito = false;
-  id_utente = currentUser;
-  if (!titolo || !descrizione || !data_inizio || !data_fine) {
+  const data_fine = "2000/10/10"
+  let id_utente
+  currentUser = "Nico"
+  id_utente = utentiList.forEach(utente => {
+    if (currentUser === utente.username){
+      const id_utente = utente.id;
+    }
+  });
+  if (!titolo || !descrizione || !data_inizio) {
     return;
   }
 
@@ -171,8 +197,8 @@ document.getElementById('submitViaggio').onclick = () => {
     id_utente
   };
 
-  middleware.add(nuovoViaggio)
-    .then(() => middleware.load())
+  middleware.add_viaggio(nuovoViaggio)
+    .then(() => middleware.load_viaggi())
     .then(res => {
       viaggiList = res;
       render();
@@ -245,6 +271,7 @@ function render() {
   });
 
 }
+
 function render_filtrati(viaggiFiltrati) {
   viaggiFiltratiContainer.innerHTML = '';
   viaggiFiltrati.forEach(viaggio => {
@@ -252,7 +279,7 @@ function render_filtrati(viaggiFiltrati) {
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
         <div>
           <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
         </div>
@@ -271,6 +298,4 @@ function render_filtrati(viaggiFiltrati) {
 function clearForm() {
   document.getElementById('titolo').value = '';
   document.getElementById('descrizione').value = '';
-  document.getElementById('data_inizio').value = '';
-  document.getElementById('data_fine').value = '';
 }

@@ -48,12 +48,19 @@ const database = {
             
         )
     },
-    select_utente: () => {
+    select_utenti: async () => {
         let sql = `
             SELECT id, username, password, email
-            FROM utente
+            FROM utenti
         `;
-        return executeQuery(sql);
+        try {
+            const result = await executeQuery(sql); // Esegui la query
+            console.log("Dati delgli utenti:", result);
+            return result; // Restituisci i risultati
+        } catch (err) {
+            console.error("Errore nell'eseguire la query:", err); // Stampa l'errore
+            throw new Error("Errore nel recupero degli utenti");
+        }
     },
 
     createTable_viaggio: async () => {
@@ -62,8 +69,8 @@ const database = {
                 id_viaggio INT PRIMARY KEY AUTO_INCREMENT,
                 titolo VARCHAR(100),
                 descrizione TEXT,
-                data_inizio DATE,
-                data_fine DATE,
+                data_inizio VARCHAR(12),
+                data_fine VARCHAR(12),
                 id_utente INT,
                 stato INT,
                 FOREIGN KEY (id_utente) REFERENCES utente(id)
@@ -122,12 +129,19 @@ const database = {
         ]);
     },
 
-    select_tappa: () => {
+    select_tappe: async () => {
         let sql = `
             SELECT id_tappa, titolo, descrizione, data, id_viaggio, id_utente
             FROM viaggio
         `;
-        return executeQuery(sql);
+        try {
+            const result = await executeQuery(sql); // Esegui la query
+            console.log("Dati delle tappe:", result);
+            return result; // Restituisci i risultati
+        } catch (err) {
+            console.error("Errore nell'eseguire la query:", err); // Stampa l'errore
+            throw new Error("Errore nel recupero delle tappe");
+        }
     },
 
 
@@ -153,12 +167,19 @@ const database = {
             preferito.id_viaggio
         ]);
     },
-    select_preferiti: () => {
+    select_preferiti: async () => {
         let sql = `
-            SELECT id_utente, id_viaggio
-            FROM viaggio
+            SELECT id_viaggio, id_utente
+            FROM preferito
         `;
-        return executeQuery(sql);
+        try {
+            const result = await executeQuery(sql); // Esegui la query
+            console.log("Dati dei preferiti:", result);
+            return result; // Restituisci i risultati
+        } catch (err) {
+            console.error("Errore nell'eseguire la query:", err); // Stampa l'errore
+            throw new Error("Errore nel recupero dei preferiti");
+        }
     },
 
     delete: (id) => {
