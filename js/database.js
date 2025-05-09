@@ -40,7 +40,7 @@ const database = {
                 descrizione TEXT,
                 data_inizio DATE,
                 data_fine DATE,
-                id_utente INT,
+                id_utente VARCHAR(20),
                 stato BOOLEAN,
                 FOREIGN KEY (id_utente) REFERENCES utente(id)
             )
@@ -52,8 +52,8 @@ const database = {
                 titolo VARCHAR(100),
                 descrizione TEXT,
                 data DATE,
-                id_viaggio INT,
-                id_utente INT,
+                id_viaggio VARCHAR(20),
+                id_utente VARCHAR(20),
                 FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
                 FOREIGN KEY (id_utente) REFERENCES utente(id)
             )
