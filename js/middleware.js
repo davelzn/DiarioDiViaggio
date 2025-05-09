@@ -1,6 +1,6 @@
 export const createMiddleware = () => {
   return {
-    load: async () => {
+    load_viaggi: async () => {
       const response = await fetch("/viaggi");
       const json = await response.json();
       return json;
@@ -10,22 +10,39 @@ export const createMiddleware = () => {
       const json = await response.json();
       return json;
     },
-    delete: async (id) => {
-      const response = await fetch("/delete/" + id, {
+    load_preferiti: async () => {
+      const response = await fetch("/preferiti");
+      const json = await response.json();
+      return json;
+    },
+    load_utenti: async () => {
+      const response = await fetch("/utenti");
+      const json = await response.json();
+      return json;
+    },
+    delete_viaggio: async (id) => {
+      const response = await fetch("/delete/viaggio" + id, {
         method: 'DELETE',
       });
       const json = await response.json();
       return json;
     },
-    delete_Tappa: async (id) => {
-      const response = await fetch("/delete/" + id, {
+    delete_tappa: async (id) => {
+      const response = await fetch("/delete/tappa" + id, {
         method: 'DELETE',
       });
       const json = await response.json();
       return json;
     },
-    add: async (viaggio) => {
-      const response = await fetch("/insert", {
+    delete_preferito: async (id) => {
+      const response = await fetch("/delete/preferito" + id, {
+        method: 'DELETE',
+      });
+      const json = await response.json();
+      return json;
+    },
+    add_viaggio: async (viaggio) => {
+      const response = await fetch("/insert/viaggio", {
           method: 'POST',
           headers: {
               "content-type": "application/json"
@@ -38,17 +55,42 @@ export const createMiddleware = () => {
       return json;        
     },
     add_tappa: async (tappa) => {
-      const response = await fetch("/insert", {
+      const response = await fetch("/insert/tappa", {
         method: 'POST',
         headers: {
             "content-type": "application/json"
         },
         body: JSON.stringify({
-            viaggio: viaggio
+            tappa: tappa
         })
     });
     const json = await response.json();
-    }
+    },
+    add_preferito: async (preferito) => {
+      const response = await fetch("/insert/tappa", {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            preferito: preferito
+        })
+      });
+      const json = await response.json();
+    },
+    add_utente: async (utente) => {
+      const response = await fetch("/insert/tappa", {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            utente: utente
+        })
+      });
+      const json = await response.json();
+    },
+
   }
 }
 

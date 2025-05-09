@@ -201,6 +201,19 @@ button:active {
     margin: 20px;
 }
 
+.schermata_conferma_login {
+    background-color: #ffffff;
+    padding: 30px;
+    display: none;
+}
+
+.container_conferma_login {
+    background-color: #ffffff;
+    border-radius: 20px;
+    justify-content: center;
+    display: block;
+}
+
 .close {
     font-size: 24px;
     cursor: pointer;

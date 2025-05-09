@@ -23,7 +23,7 @@ const executeQuery = (sql, par = []) => {
 };
 
 const database = {
-    createTable: async () => {
+    createTable_utente: async () => {
         await executeQuery(`
             CREATE TABLE IF NOT EXISTS utente (
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -32,7 +32,31 @@ const database = {
                 email VARCHAR(255) UNIQUE
             )
         `);
-        
+    },
+
+    insert_utente: async (utente) => {
+        let sql = `
+            INSERT INTO utente (id,username,password,email)
+            VAlues (?,?,?,?)
+        `;
+        await executeQuery(sql,[
+            utente.id,
+            utente.username,
+            utente.password,
+            utente.email
+        ]
+            
+        )
+    },
+    select_utente: () => {
+        let sql = `
+            SELECT id, username, password, email
+            FROM utente
+        `;
+        return executeQuery(sql);
+    },
+
+    createTable_viaggio: async () => {
         await executeQuery(`
             CREATE TABLE IF NOT EXISTS viaggio (
                 id_viaggio INT PRIMARY KEY AUTO_INCREMENT,
@@ -40,69 +64,14 @@ const database = {
                 descrizione TEXT,
                 data_inizio DATE,
                 data_fine DATE,
-                id_utente VARCHAR(20),
-                stato BOOLEAN,
+                id_utente INT,
+                stato INT,
                 FOREIGN KEY (id_utente) REFERENCES utente(id)
             )
-        `);
-        
-        await executeQuery(`
-            CREATE TABLE IF NOT EXISTS Tappa (
-                id_tappa INT PRIMARY KEY AUTO_INCREMENT,
-                titolo VARCHAR(100),
-                descrizione TEXT,
-                data DATE,
-                id_viaggio VARCHAR(20),
-                id_utente VARCHAR(20),
-                FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
-                FOREIGN KEY (id_utente) REFERENCES utente(id)
-            )
-        `);
-        //console.log('Tabelle create ✅');
+        `);//stato finito se = 0
     },
 
-    registerUser: async (username, password, email) => {
-        try {
-            const user = await executeQuery(
-                "SELECT * FROM utenti WHERE username = ? OR email = ?",
-                [username, email]
-            );
-
-            if (user.length > 0) {
-                return { exists: true };
-            }
-
-            await executeQuery(
-                "INSERT INTO utenti (username, password, email) VALUES (?, ?, ?)",
-                [username, password, email]
-            );
-
-            return { success: true };
-        } catch (err) {
-            console.error(err);
-            return { error: true };
-        }
-    },
-
-    loginUser: async (username, password) => {
-        try {
-            const user = await executeQuery(
-                "SELECT * FROM utenti WHERE username = ? AND password = ?",
-                [username, password]
-            );
-
-            if (user.length === 1) {
-                return { success: true, user: user[0] };
-            } else {
-                return { success: false };
-            }
-        } catch (err) {
-            console.error(err);
-            return { error: true };
-        }
-    },
-
-    insert: async (viaggio) => {
+    insert_viaggio: async (viaggio) => {
         let sql = `
             INSERT INTO viaggio (titolo, descrizione, data_inizio, data_fine, id_utente)
             VALUES (?, ?, ?, ?, ?)
@@ -116,9 +85,77 @@ const database = {
         ]);
     },
 
-    select: () => {
+    select_viaggi: () => {
         let sql = `
             SELECT id_viaggio, titolo, descrizione, data_inizio, data_fine, id_utente
+            FROM viaggio
+        `;
+        return executeQuery(sql);
+    },
+
+    createTable_tappa: async () => {
+        await executeQuery(`
+            CREATE TABLE IF NOT EXISTS tappa (
+                id_tappa INT PRIMARY KEY AUTO_INCREMENT,
+                titolo VARCHAR(100),
+                descrizione TEXT,
+                data DATE,
+                id_viaggio VARCHAR(20),
+                id_utente INT,
+                FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
+                FOREIGN KEY (id_utente) REFERENCES utente(id)
+            )
+        `);
+    },
+
+    insert_tappa : async (tappa) => {
+        let sql =`
+            INSERT INTO tappa (titolo, descrizione, data,id_viaggio, id_utente)
+            VALUES (?,?,?,?)
+        `;
+        return await executeQuery(sql, [
+            tappa.titotlo,
+            tappa.descrizione,
+            tappa.data,
+            tappa.id_viaggio,
+            tappa.id_utente
+        ]);
+    },
+
+    select_tappa: () => {
+        let sql = `
+            SELECT id_tappa, titolo, descrizione, data, id_viaggio, id_utente
+            FROM viaggio
+        `;
+        return executeQuery(sql);
+    },
+
+
+    createTable_preferiti: async () => {
+        await executeQuery(`
+            CREATE TABLE IF NOT EXIST preferito (
+                id_utente INT PRIMARY KEY,
+                id_viaggio INT PRIMARY KEY,
+                FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
+                FOREIGN KEY (id_utente) REFERENCES utente(id)
+            )
+        `)
+        //console.log('Tabelle create ✅');
+    },
+
+    insert_preferiti : async (preferito) => {
+        let sql =`
+            INSERT INTO preferito (id_utente,id_viaggio)
+            VALUES (?,?)
+        `;
+        return await executeQuery(sql, [
+            preferito.id_utente,
+            preferito.id_viaggio
+        ]);
+    },
+    select_preferiti: () => {
+        let sql = `
+            SELECT id_utente, id_viaggio
             FROM viaggio
         `;
         return executeQuery(sql);
@@ -135,6 +172,13 @@ const database = {
             DELETE FROM tappa WHERE id_tappa = ?
         `;
         return executeQuery(sql, [id]);
+    },
+    delete_preferiti : (id1,id2) => {
+        let sql = `
+            DELETE FROM preferito 
+            WHERE id_tappa = ? AND id_viaggio = ?
+        `
+        return executeQuery(sql, [id1,id2])
     }
 };
 

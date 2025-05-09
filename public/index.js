@@ -38,21 +38,32 @@ navAccedi.onclick = () => {
 }
 userHomeBtn.onclick = () => {
   console.log("click user")
+  document.getElementById("schermata_conferma_login").style.display = "none"
   schHome.style.display = 'none';
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
 }
 homeNavBtn.onclick = () => {
-  console.log("click home")
   loadViaggi()
+  console.log("click home")
+  document.getElementById("schermata_conferma_login").style.display = "none"
   schHome.style.display = 'block';
   schermataAggiuntaViaggio.style.display = "none";
   schDash.style.display = 'none';
   schSearch.style.display = 'none';
 }
+
+document.getElementById("ok_acceduto").onclick = () => {
+  document.getElementById("schermata_conferma_login").style.display = "none"
+  let currentUser;
+  currentUser = document.getElementById("userNavHome").value;
+  console.log(currentUser)
+  schDash.style.display = 'block';
+  loadViaggi()
+}
+
 preferitiNavBtn.onclick = () => {
   console.log("click preferiti")
-  loadViaggi()
   schHome.style.display = 'block';
   schermataAggiuntaViaggio.style.display = "none";
   schDash.style.display = 'none';
@@ -107,7 +118,7 @@ sendReg.onclick = async () => {
 }
 
 function loadViaggi() {
-  middleware.load()
+  middleware.load_viaggi()
     .then(res => {
       viaggiList = res;
       console.log(viaggiList)
@@ -219,7 +230,7 @@ function render() {
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
         <div>
           <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
         </div>

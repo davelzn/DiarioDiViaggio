@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use(cors());
 
-database.createTable();
+database.createTable_viaggio();
 
 app.use('/js', express.static('js'));
 
