@@ -135,12 +135,66 @@ header {
 .schermata_dettaglio_viaggio,
 .schermata_home,
 .schermata_search,
-.schermata_dash,
-.schermata_aggiunta_viaggio {
+.schermata_dash{
     text-align: center;
     display: none;
     padding: 20px;
 }
+.schermata_aggiunta_viaggio {
+    display: none;
+    background-color: #ffffff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    max-width: 500px;
+    margin: 30px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    color: #333333;
+  }
+  
+  .schermata_aggiunta_viaggio h5 {
+    font-size: 22px;
+    color: var(--blu);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .schermata_aggiunta_viaggio label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    margin-top: 16px;
+    color: var(--blu);
+  }
+  
+  .schermata_aggiunta_viaggio input,
+  .schermata_aggiunta_viaggio textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  .schermata_aggiunta_viaggio textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .schermata_aggiunta_viaggio button {
+    margin-top: 20px;
+    width: 100%;
+    background-color: var(--giallo);
+    color: #333333;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+  }
+  
 .schermata_login{
     display: none;
     text-align: center;

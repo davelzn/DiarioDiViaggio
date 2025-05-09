@@ -146,7 +146,7 @@ function load() {
 }
 
 function loadFiltrati(searchText) {
-  middleware.load()
+  middleware.load_viaggi()
     .then(res => {
       viaggiList = res;
       const viaggiFiltrati = [];
