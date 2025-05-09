@@ -1,4 +1,4 @@
-import { createLogin } from "../js/login.js";
+import { createLogin, registraUtente } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
 let currentUser;
 const navAccedi = document.getElementById("navbar_accedi")
@@ -92,7 +92,7 @@ searchTripBtn.onclick = () => {
   const searchText = document.getElementById('searchInput').value.toLowerCase();
   loadFiltrati(searchText)
 }
-sendReg.onclick = async () => {
+/*sendReg.onclick = async () => {
   const email = document.getElementById("email").value;
   const username = document.getElementById("userR").value;
   const password = document.getElementById("pswR").value;
@@ -115,6 +115,9 @@ sendReg.onclick = async () => {
     alert("Errore nella registrazione");
     console.error(err);
   }
+}*/
+sendReg.onclick = () =>{
+  registraUtente();
 }
 
 function load() {

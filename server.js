@@ -98,7 +98,26 @@ app.delete("/delete/:id", async (req, res) => {
     res.json({ result: "ok" });
    
 });
+app.post("/utente", async (req, res) => {
+    const { nome, email } = req.body;
 
+    if (!nome || !email) {
+        return res.status(400).json({ error: "Nome ed email obbligatori." });
+    }
+
+    const password = crypto.randomUUID().split('-')[0]; 
+
+    try {
+        await mailer.send(email, "La tua password di accesso", `La tua password è: ${password}`);
+
+        await database.insertUtente({ nome, email, password });
+
+        res.json({ result: "ok" });
+    } catch (e) {
+        console.error("Errore nella registrazione:", e);
+        res.status(500).json({ error: "Registrazione fallita" });
+    }
+});
 const server = http.createServer(app);
 const port = 5600;
 server.listen(port, () => {
