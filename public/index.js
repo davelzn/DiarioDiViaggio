@@ -1,13 +1,14 @@
 import { createLogin, registraUtente } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
 let currentUser;
-const navAccedi = document.getElementById("navbar_accedi")
-const navLogin = document.getElementById("navbar_login")
-const navReg = document.getElementById("navbar_reg")
+const navAccedi = document.getElementById("navbar_accedi");
+const navLogin = document.getElementById("navbar_login");
+const navReg = document.getElementById("navbar_reg");
 const schEmbr = document.getElementById("schermata_embrionale");
 const schLog = document.getElementById("schermata_login");
 const schHome = document.getElementById("schermata_home");
-const schSearch = document.getElementById("schermata_search")
+const schSearch = document.getElementById("schermata_search");
+const schPreferiti = document.getElementById("schermata_preferiti");
 const schDash = document.getElementById("schermata_dash");
 const schReg = document.getElementById("schermata_reg");
 const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
@@ -20,6 +21,7 @@ const regBtn = document.getElementById("regBtn");
 const sendReg = document.getElementById("sendReg");
 const addTripBtn = document.getElementById("addTrip");
 const searchTripBtn = document.getElementById("searchTrip");
+const viaggiPreferitiContainer = document.getElementById("viaggi_preferiti_container");
 const posizione = 'it-IT';
 let isLogged = false;
 createLogin();
@@ -45,6 +47,7 @@ userHomeBtn.onclick = () => {
   schHome.style.display = 'none';
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
+  schPreferiti.style.display='none';
 }
 homeNavBtn.onclick = () => {
   console.log("click home")
@@ -53,6 +56,7 @@ homeNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = "none";
   schDash.style.display = 'none';
   schSearch.style.display = 'none';
+  schPreferiti.style.display='none';
 }
 
 document.getElementById("ok_acceduto").onclick = () => {
@@ -63,12 +67,17 @@ document.getElementById("ok_acceduto").onclick = () => {
 }
 
 preferitiNavBtn.onclick = () => {
-  console.log("click preferiti")
-  schHome.style.display = 'block';
-  schermataAggiuntaViaggio.style.display = "none";
-  schDash.style.display = 'none';
+  console.log("click preferiti");
+  schPreferiti.style.display = 'block';  
+  schHome.style.display = 'none';
   schSearch.style.display = 'none';
+  schermataAggiuntaViaggio.style.display = 'none';
+  schDash.style.display = 'none';
+  schSearch.style.display= 'none';
+
+  loadPreferiti(); 
 }
+
 searchNavBtn.onclick = () => {
   console.log("click search")
   loadFiltrati()
@@ -76,6 +85,7 @@ searchNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = "none";
   schHome.style.display = 'none'
   schDash.style.display = 'none';
+  schPreferiti.style.display='none';
 }
 regBtn.onclick = () => {
   console.log("click reg")
@@ -118,6 +128,15 @@ searchTripBtn.onclick = () => {
 }*/
 sendReg.onclick = () =>{
   registraUtente();
+}
+
+function loadPreferiti() {
+  middleware.load_preferiti()
+    .then(res => {
+      const preferiti = res; // è già filtrato dal backend
+      render_preferiti(preferiti);
+      schPreferiti.style.display = 'block';
+    });
 }
 
 function load() {
@@ -182,11 +201,12 @@ document.getElementById('submitViaggio').onclick = () => {
   const data_fine = "2000/10/10"
   let id_utente
   currentUser = "Nico"
-  id_utente = utentiList.forEach(utente => {
-    if (currentUser === utente.username){
-      const id_utente = utente.id;
-    }
-  });
+  for (let i = 0; i < utentiList.length; i++) {
+  if (utentiList[i].username === currentUser) {
+    id_utente = utentiList[i].id;
+    break;
+  }
+}
   if (!titolo || !descrizione || !data_inizio) {
     return;
   }
@@ -225,7 +245,7 @@ document.getElementById('submitTappa').onclick = () => {
   };
 
   middleware.add_tappa(nuovoTappa)
-    .then(() => middleware.load())
+    .then(() => middleware.load_tappe())
     .then(res => {
       tappeList = res;
       render();
@@ -234,8 +254,8 @@ document.getElementById('submitTappa').onclick = () => {
 };
 
 window.deleteViaggio = (id) => {
-  middleware.delete(id)
-    .then(() => middleware.load())
+  middleware.delete_viaggio(id)
+    .then(() => middleware.load_viaggi())
     .then(res => {
       viaggiList = res;
       render();
@@ -243,7 +263,7 @@ window.deleteViaggio = (id) => {
 };
 
 window.deleteTappa = (id) => {
-  middleware.delete_Tappa(id)
+  middleware.delete_tappa(id)
   .then(() => middleware.load_tappe())
   .then(res => {
     tappeList = res;
@@ -255,25 +275,37 @@ window.deleteTappa = (id) => {
 function render() {
   viaggiContainer.innerHTML = '';
   viaggiList.forEach(viaggio => {
-    viaggiContainer.innerHTML += `
-      <div class="viaggio">
-        <h5>${viaggio.titolo}</h5>
-        <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
-        <div>
-          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
-        </div>
+    const isPreferito = preferitiList.some(p => p.id_viaggio === viaggio.id_viaggio);
+
+    const viaggioDiv = document.createElement("div");
+    viaggioDiv.className = "viaggio";
+    viaggioDiv.innerHTML = `
+      <h5>${viaggio.titolo}</h5>
+      <p>${viaggio.descrizione}</p>
+      <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
+      <div>
+        <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
+        <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
       </div>
     `;
-    const eliminaBtns = viaggiContainer.querySelectorAll(".elimina_viaggio");
-    eliminaBtns.forEach((btn, index) => {
-      btn.onclick = () => {
-        deleteViaggio(viaggiList[index].id_viaggio);
-      };
-    });
-  });
 
+    viaggioDiv.querySelector(".elimina_viaggio").onclick = () => {
+      deleteViaggio(viaggio.id_viaggio);
+    };
+
+    viaggioDiv.querySelector(".aggiungi_preferito").onclick = async () => {
+      const nuovoPreferito = {
+        id_viaggio: viaggio.id_viaggio
+      };
+      await middleware.add_preferito(nuovoPreferito);
+      preferitiList = await middleware.load_preferiti(); 
+      render(); 
+    };
+
+    viaggiContainer.appendChild(viaggioDiv);
+  });
 }
+
 
 function render_filtrati(viaggiFiltrati) {
   viaggiFiltratiContainer.innerHTML = '';
@@ -296,6 +328,30 @@ function render_filtrati(viaggiFiltrati) {
     });
   });
 
+}
+
+function render_preferiti(preferiti) {
+  viaggiPreferitiContainer.innerHTML = '';
+  preferiti.forEach((viaggio, index) => {
+    viaggiPreferitiContainer.innerHTML += `
+      <div class="viaggio">
+        <h5>${viaggio.titolo}</h5>
+        <p>${viaggio.descrizione}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <div>
+          <button class="rimuovi_preferito btn btn-danger btn-sm">Rimuovi dai preferiti</button>
+        </div>
+      </div>
+    `;
+  });
+
+  const rimuoviBtns = viaggiPreferitiContainer.querySelectorAll(".rimuovi_preferito");
+  rimuoviBtns.forEach((btn, index) => {
+    btn.onclick = async () => {
+      await middleware.delete_preferito(preferiti[index].id_viaggio);
+      loadPreferiti(); 
+    };
+  });
 }
 
 function clearForm() {

@@ -51,7 +51,7 @@ const database = {
     select_utenti: async () => {
         let sql = `
             SELECT id, username, password, email
-            FROM utenti
+            FROM utente
         `;
         try {
             const result = await executeQuery(sql); // Esegui la query
@@ -118,10 +118,10 @@ const database = {
     insert_tappa : async (tappa) => {
         let sql =`
             INSERT INTO tappa (titolo, descrizione, data,id_viaggio, id_utente)
-            VALUES (?,?,?,?)
+            VALUES (?,?,?,?,?)
         `;
         return await executeQuery(sql, [
-            tappa.titotlo,
+            tappa.titolo,
             tappa.descrizione,
             tappa.data,
             tappa.id_viaggio,
@@ -132,7 +132,7 @@ const database = {
     select_tappe: async () => {
         let sql = `
             SELECT id_tappa, titolo, descrizione, data, id_viaggio, id_utente
-            FROM viaggio
+            FROM tappa
         `;
         try {
             const result = await executeQuery(sql); // Esegui la query
@@ -147,12 +147,13 @@ const database = {
 
     createTable_preferiti: async () => {
         await executeQuery(`
-            CREATE TABLE IF NOT EXIST preferito (
-                id_utente INT PRIMARY KEY,
-                id_viaggio INT PRIMARY KEY,
+            CREATE TABLE IF NOT EXISTS preferito (
+                id_utente INT,
+                id_viaggio INT,
+                PRIMARY KEY (id_utente, id_viaggio),
                 FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
                 FOREIGN KEY (id_utente) REFERENCES utente(id)
-            )
+)
         `)
         //console.log('Tabelle create ✅');
     },
@@ -194,12 +195,12 @@ const database = {
         `;
         return executeQuery(sql, [id]);
     },
-    delete_preferiti : (id1,id2) => {
+    delete_preferiti : (id_utente,id_viaggio) => {
         let sql = `
             DELETE FROM preferito 
-            WHERE id_tappa = ? AND id_viaggio = ?
+            WHERE id_utente = ? AND id_viaggio = ?
         `
-        return executeQuery(sql, [id1,id2])
+        return executeQuery(sql, [id_utente,id_viaggio])
     }
 };
 

@@ -320,3 +320,10 @@ textarea {
 #regBtn {
     color:#00A8E8;
 }
+
+.viaggi-preferiti-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 80px;
+}

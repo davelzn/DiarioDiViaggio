@@ -34,7 +34,7 @@ app.post("/insert/viaggio", async (req, res) => {
 app.post("/insert/tappe", async (req, res) => {
     const tappa = req.body.tappa;
     try {
-        await database.insert(tappa);
+        await database.insert_tappa(tappa);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
@@ -45,7 +45,7 @@ app.post("/insert/tappe", async (req, res) => {
 app.post("/insert/preferiti", async (req, res) => {
     const preferito = req.body.preferito;
     try {
-        await database.insert(preferito);
+        await database.insert_preferiti(preferito);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
@@ -53,9 +53,9 @@ app.post("/insert/preferiti", async (req, res) => {
     }
 });
 app.post("/insert/utenti", async (req, res) => {
-    const utente = req.body.preferito;
+    const utente = req.body.utente;
     try {
-        await database.insert(utente);
+        await database.insert_utente(utente);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
@@ -98,6 +98,12 @@ app.delete("/delete/:id", async (req, res) => {
     res.json({ result: "ok" });
    
 });
+app.delete("/delete/preferito/:id_utente/:id_viaggio", async (req, res) => {
+    const { id_utente, id_viaggio } = req.params;
+    await database.delete_preferiti(id_utente, id_viaggio);
+    res.json({ result: "ok" });
+});
+
 app.post("/utente", async (req, res) => {
     const { nome, email } = req.body;
 
