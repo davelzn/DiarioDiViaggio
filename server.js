@@ -7,6 +7,8 @@ const database = require("./js/database");
 const app = express();
 
 database.createTable_viaggio();
+database.createTable_utente()
+database.createTable_preferiti();
 
 app.use(express.json());
 
@@ -42,17 +44,17 @@ app.post("/insert/tappe", async (req, res) => {
     }
 });
 
-app.post("/insert/preferiti", async (req, res) => {
+app.post("/insert/preferito", async (req, res) => {
     const preferito = req.body.preferito;
     try {
-        await database.insert_preferiti(preferito);
+        await database.insert_preferito(preferito);
         res.json({ result: "ok" });
     } catch (e) {
         console.error(e);
         res.status(500).json({ result: "ok" })
     }
 });
-app.post("/insert/utenti", async (req, res) => {
+app.post("/insert/utente", async (req, res) => {
     const utente = req.body.utente;
     try {
         await database.insert_utente(utente);

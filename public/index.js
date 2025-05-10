@@ -24,10 +24,35 @@ const searchTripBtn = document.getElementById("searchTrip");
 const viaggiPreferitiContainer = document.getElementById("viaggi_preferiti_container");
 const posizione = 'it-IT';
 let isLogged = false;
+
 createLogin();
 const middleware = createMiddleware();
 load();
 
+/*function creautente() {
+  const username = 'Nicolo';  // Assicurati che 'Nico' sia una stringa
+  const password = '1234';  // La password deve essere una stringa (o un numero se vuoi, ma dovresti essere consistente)
+  const email = 'nicolopizzonia2005@gmail.com'
+  const nuovoUtente = {
+    username,
+    password,
+    email
+
+  };
+
+  middleware.add_utente(nuovoUtente)
+    .then(() => middleware.load_utenti())
+    .then(res => {
+      viaggiList = res;
+      render();
+      clearForm();
+    })
+    .catch(error => {
+      console.error('Errore durante la creazione dell\'utente:', error);
+    });
+}
+creautente()
+*/
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
 let viaggiList = [];
@@ -74,8 +99,8 @@ preferitiNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = 'none';
   schDash.style.display = 'none';
   schSearch.style.display= 'none';
-
-  loadPreferiti(); 
+  const ut = 2
+  loadViaggiPreferiti(ut); 
 }
 
 searchNavBtn.onclick = () => {
@@ -129,13 +154,30 @@ searchTripBtn.onclick = () => {
 sendReg.onclick = () =>{
   registraUtente();
 }
-
-function loadPreferiti() {
+function loadViaggiPreferiti(ut) {
   middleware.load_preferiti()
+  .then(res => {
+    preferitiList = res;
+    console.log(preferitiList)
+  })
+  middleware.load_viaggi()
     .then(res => {
-      const preferiti = res; // è già filtrato dal backend
-      render_preferiti(preferiti);
-      schPreferiti.style.display = 'block';
+      viaggiList = res;
+      const viaggiFiltrati = [];
+      for (let i = 0; i < preferitiList.length; i++) {
+        const preferito = preferitiList[i];
+        if (preferito.id_utente = ut) {
+          for (let i = 0; i < viaggiList.length; i++){
+            const viaggio = viaggiList[i];
+            if (viaggio.id_viaggio = preferito.id_viaggio){
+              viaggiFiltrati.push(viaggio);
+            }
+          }
+        }
+      }
+      console.log(viaggiFiltrati)
+      render_preferiti(viaggiFiltrati);
+      viaggiFiltratiContainer.style.display = 'block';
     });
 }
 
@@ -192,7 +234,6 @@ document.getElementById('openViaggioForm').onclick = () => {
   }};
   */
 
-
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;
@@ -200,7 +241,7 @@ document.getElementById('submitViaggio').onclick = () => {
   let finito = false;
   const data_fine = "2000/10/10"
   let id_utente
-  currentUser = "Nico"
+  currentUser = "Nicolo"
   for (let i = 0; i < utentiList.length; i++) {
   if (utentiList[i].username === currentUser) {
     id_utente = utentiList[i].id;
@@ -294,12 +335,26 @@ function render() {
     };
 
     viaggioDiv.querySelector(".aggiungi_preferito").onclick = async () => {
+      let id_utente
+      currentUser = "Nicolo"
+      for (let i = 0; i < utentiList.length; i++) {
+        if (utentiList[i].username === currentUser) {
+          id_utente = utentiList[i].id;
+          break;
+        }
+      }
+      console.log(id_utente)
       const nuovoPreferito = {
-        id_viaggio: viaggio.id_viaggio
+        id_viaggio: viaggio.id_viaggio,
+        id_utente: id_utente
       };
-      await middleware.add_preferito(nuovoPreferito);
-      preferitiList = await middleware.load_preferiti(); 
-      render(); 
+      middleware.add_preferito(nuovoPreferito)
+      .then(() => middleware.load_preferiti())
+      .then(res => {
+        preferitiList = res;
+        render();
+        clearForm();
+    });
     };
 
     viaggiContainer.appendChild(viaggioDiv);
@@ -337,19 +392,19 @@ function render_preferiti(preferiti) {
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:${viaggio.data_fine.split('T')[0]}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
         <div>
           <button class="rimuovi_preferito btn btn-danger btn-sm">Rimuovi dai preferiti</button>
         </div>
       </div>
     `;
   });
-
+  console.log(preferitiList)
   const rimuoviBtns = viaggiPreferitiContainer.querySelectorAll(".rimuovi_preferito");
   rimuoviBtns.forEach((btn, index) => {
     btn.onclick = async () => {
-      await middleware.delete_preferito(preferiti[index].id_viaggio);
-      loadPreferiti(); 
+      await middleware.delete_preferito(preferitiList[index].id_viaggio);
+      loadViaggiPreferiti(); 
     };
   });
 }

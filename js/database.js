@@ -158,7 +158,7 @@ const database = {
         //console.log('Tabelle create ✅');
     },
 
-    insert_preferiti : async (preferito) => {
+    insert_preferito : async (preferito) => {
         let sql =`
             INSERT INTO preferito (id_utente,id_viaggio)
             VALUES (?,?)
