@@ -317,7 +317,6 @@ function render() {
   let html = '';
 
   viaggiList.forEach(viaggio => {
-    // Sostituzione di .some() con un ciclo
     let isPreferito = false;
     for (let i = 0; i < preferitiList.length; i++) {
       if (preferitiList[i].id_viaggio === viaggio.id_viaggio) {
@@ -341,38 +340,39 @@ function render() {
 
   viaggiContainer.innerHTML = html;
 
-  // Aggiunta degli event listener dopo aver inserito l'HTML
-  document.querySelectorAll('.elimina_viaggio').forEach(btn => {
-    btn.onclick = () => {
-      const idViaggio = btn.closest('.viaggio').dataset.id;
+  const cards = document.querySelectorAll('.viaggio');
+  cards.forEach(card => {
+    const idViaggio = card.getAttribute('data-id');
+
+    const btnElimina = card.querySelector('.elimina_viaggio');
+    btnElimina.onclick = () => {
       deleteViaggio(idViaggio);
     };
-  });
 
-  document.querySelectorAll('.aggiungi_preferito').forEach(btn => {
-    btn.onclick = async () => {
-      const idViaggio = btn.closest('.viaggio').dataset.id;
-      let id_utente;
-      currentUser = "Nicolo";
-      for (let i = 0; i < utentiList.length; i++) {
-        if (utentiList[i].username === currentUser) {
-          id_utente = utentiList[i].id;
-          break;
+    const btnPreferito = card.querySelector('.aggiungi_preferito');
+    if (btnPreferito) {
+      btnPreferito.onclick = async () => {
+        let id_utente;
+        currentUser = "Nicolo";
+        for (let i = 0; i < utentiList.length; i++) {
+          if (utentiList[i].username === currentUser) {
+            id_utente = utentiList[i].id;
+            break;
+          }
         }
-      }
-      console.log(id_utente);
-      const nuovoPreferito = {
-        id_viaggio: idViaggio,
-        id_utente: id_utente
+        const nuovoPreferito = {
+          id_viaggio: idViaggio,
+          id_utente: id_utente
+        };
+        middleware.add_preferito(nuovoPreferito)
+        .then(() => middleware.load_preferiti())
+        .then(res => {
+          preferitiList = res;
+          render();
+          clearForm();
+        });
       };
-      middleware.add_preferito(nuovoPreferito)
-      .then(() => middleware.load_preferiti())
-      .then(res => {
-        preferitiList = res;
-        render();
-        clearForm();
-      });
-    };
+    }
   });
 }
 
@@ -403,7 +403,7 @@ function render_filtrati(viaggiFiltrati) {
 
 function render_preferiti(preferiti) {
   viaggiPreferitiContainer.innerHTML = '';
-  preferiti.forEach((viaggio, index) => {
+  preferiti.forEach((viaggio) => {
     viaggiPreferitiContainer.innerHTML += `
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
