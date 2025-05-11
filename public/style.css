@@ -45,6 +45,15 @@ header {
     margin: 30px auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
+.viaggi-personali-container {
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 400px;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
 
 /* Navbar */
 .navbar_homepage {

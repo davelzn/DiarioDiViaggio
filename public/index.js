@@ -55,16 +55,41 @@ creautente()
 */
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
+const ViaggiPersonaliContainer = document.querySelector('.viaggi-personali-container')
 let viaggiList = [];
 let tappeList = [];
 let utentiList = [];
 let preferitiList = [];
+let Utenteattuale = 'Nicolo'
+let Idattuale = 2
+
+function elmina_tutti_preferiti(){
+  preferitiList.forEach(element => {
+    middleware.delete_preferito(element.id_utente,element.id_viaggio)
+    .then(() => middleware.load_preferiti())
+    .then(res => {
+      preferitiList = res;
+      render();
+    });
+  });
+}
+function elmina_tutti_viaggi(){
+  viaggiList.forEach(element => {
+    middleware.delete_viaggio(element.id_viaggio)
+    .then(() => middleware.load_viaggi())
+    .then(res => {
+      viaggiList = res;
+      render();
+    });
+  });
+}
 
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
   navLogin.style.display = "flex";
   schEmbr.style.display = "none";
   schLog.style.display = " block";
+  
 }
 userHomeBtn.onclick = () => {
   console.log("click user")
@@ -156,28 +181,33 @@ sendReg.onclick = () =>{
 }
 function loadViaggiPreferiti(ut) {
   middleware.load_preferiti()
-  .then(res => {
-    preferitiList = res;
-    console.log(preferitiList)
-  })
-  middleware.load_viaggi()
+    .then(res => {
+      preferitiList = res;
+
+      return middleware.load_viaggi();
+    })
     .then(res => {
       viaggiList = res;
       const viaggiFiltrati = [];
+
       for (let i = 0; i < preferitiList.length; i++) {
         const preferito = preferitiList[i];
-        if (preferito.id_utente = ut) {
-          for (let i = 0; i < viaggiList.length; i++){
-            const viaggio = viaggiList[i];
-            if (viaggio.id_viaggio = preferito.id_viaggio){
+        if (preferito.id_utente === ut) {
+          for (let j = 0; j < viaggiList.length; j++) {
+            const viaggio = viaggiList[j];
+            if (viaggio.id_viaggio === preferito.id_viaggio) {
               viaggiFiltrati.push(viaggio);
             }
           }
         }
       }
-      console.log(viaggiFiltrati)
+
+      console.log(viaggiFiltrati);
       render_preferiti(viaggiFiltrati);
       viaggiFiltratiContainer.style.display = 'block';
+    })
+    .catch(error => {
+      console.error("Errore durante il caricamento dei preferiti:", error);
     });
 }
 
@@ -294,13 +324,23 @@ document.getElementById('submitTappa').onclick = () => {
     });
 };
 
-window.deleteViaggio = (id) => {
-  middleware.delete_viaggio(id)
-    .then(() => middleware.load_viaggi())
-    .then(res => {
-      viaggiList = res;
-      render();
-    });
+window.deleteViaggio = async (id) => {
+  console.log("fatto");
+
+  try {
+    await middleware.delete_preferito(Idattuale, id);
+    await middleware.delete_viaggio(id);
+
+    const res = await middleware.load_viaggi();
+    viaggiList = res;
+    const res2 = await middleware.load_preferiti();
+    preferitiList = res;
+
+    render();
+    
+  } catch (error) {
+    console.error("Errore durante l'eliminazione:", error);
+  }
 };
 
 window.deleteTappa = (id) => {
@@ -419,7 +459,7 @@ function render_preferiti(preferiti) {
   const rimuoviBtns = viaggiPreferitiContainer.querySelectorAll(".rimuovi_preferito");
   rimuoviBtns.forEach((btn, index) => {
     btn.onclick = async () => {
-      await middleware.delete_preferito(preferitiList[index].id_viaggio);
+      await middleware.delete_preferito(preferitiList[index].id_utente,preferitiList[index].id_viaggio);
       loadViaggiPreferiti(); 
     };
   });

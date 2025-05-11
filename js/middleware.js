@@ -35,7 +35,7 @@ export const createMiddleware = () => {
       return json;
     },
     delete_preferito: async (id_utente, id_viaggio) => {
-      const response = await fetch(`/delete/preferiti/${id_utente}/${id_viaggio}`, {
+      const response = await fetch(`/delete/preferito/${id_utente}/${id_viaggio}`, {
       method: 'DELETE',
     });
     const json = await response.json();
