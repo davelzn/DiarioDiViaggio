@@ -141,7 +141,6 @@ header {
   }
 
 /* Schermate */
-.schermata_dettaglio_viaggio,
 .schermata_home,
 .schermata_search,
 .schermata_dash{
@@ -256,7 +255,8 @@ button:active {
 }
 
 /* Modal Dettaglio Viaggio */
-.schermata_dettaglio_viaggio {
+.schermata_tappe {
+    display: none;
     background-color: #ffffff;
     border-radius: 16px;
     padding: 20px;
@@ -330,6 +330,8 @@ textarea {
     overflow-y: auto;
     padding: 20px;
     padding-bottom: 80px;
+    display: none;
+
 }
 
 
@@ -343,3 +345,4 @@ textarea {
   padding: 20px;
   padding-bottom: 80px;
 }
+

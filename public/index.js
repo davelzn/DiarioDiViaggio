@@ -22,18 +22,19 @@ const sendReg = document.getElementById("sendReg");
 const addTripBtn = document.getElementById("addTrip");
 const searchTripBtn = document.getElementById("searchTrip");
 const viaggiPreferitiContainer = document.getElementById("viaggi_preferiti_container");
-const ViaggiPersonaliContainer = document.getElementById("viaggi_personali_container")
-const posizione = 'it-IT';
+const ViaggiPersonaliContainer = document.getElementById("viaggi_personali_container");
+const schTappe = document.getElementById("schermata_tappe");
+const posizione = 'en-CA';//YYYY/MM/DD
 let isLogged = false;
 
 createLogin();
 const middleware = createMiddleware();
 load();
 
-/*function creautente() {
-  const username = 'Nicolo';  // Assicurati che 'Nico' sia una stringa
-  const password = '1234';  // La password deve essere una stringa (o un numero se vuoi, ma dovresti essere consistente)
-  const email = 'nicolopizzonia2005@gmail.com'
+function creautente() {
+  const username = 'Tommy';  // Assicurati che 'Nico' sia una stringa
+  const password = 'tommy';  // La password deve essere una stringa (o un numero se vuoi, ma dovresti essere consistente)
+  const email = 'paolettitommaso@itis-molinari.eu'
   const nuovoUtente = {
     username,
     password,
@@ -52,8 +53,8 @@ load();
       console.error('Errore durante la creazione dell\'utente:', error);
     });
 }
-creautente()
-*/
+
+
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
 
@@ -61,9 +62,9 @@ let viaggiList = [];
 let tappeList = [];
 let utentiList = [];
 let preferitiList = [];
-let Utenteattuale = 'Nicolo'
-let Idattuale = 2
-
+let viaggiPersonali = [];
+let Idattuale;
+/*
 function elmina_tutti_preferiti(){
   preferitiList.forEach(element => {
     middleware.delete_preferito(element.id_utente,element.id_viaggio)
@@ -84,7 +85,7 @@ function elmina_tutti_viaggi(){
     });
   });
 }
-
+*/
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
   navLogin.style.display = "flex";
@@ -93,8 +94,10 @@ navAccedi.onclick = () => {
   
 }
 userHomeBtn.onclick = () => {
-  console.log("click user")
-  document.getElementById("schermata_conferma_login").style.display = "none"
+  schTappe.style.display = "none";
+  document.getElementById("schermata_conferma_login").style.display = "none";
+  schermataAggiuntaViaggio.style.display = "none";
+  ViaggiPersonaliContainer.style.display = "block";
   schHome.style.display = 'none';
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
@@ -102,6 +105,7 @@ userHomeBtn.onclick = () => {
   loadPersonali()
 }
 homeNavBtn.onclick = () => {
+  schTappe.style.display = "none";
   console.log("click home")
   document.getElementById("schermata_conferma_login").style.display = "none"
   schHome.style.display = 'block';
@@ -112,13 +116,21 @@ homeNavBtn.onclick = () => {
 }
 
 document.getElementById("ok_acceduto").onclick = () => {
+  loadPersonali()
+  ViaggiPersonaliContainer.style.display = "block";
   document.getElementById("schermata_conferma_login").style.display = "none"
   currentUser = document.getElementById("userNavHome").value;
-  console.log(currentUser)
+  utentiList.forEach(utente =>{
+    if (utente.username === currentUser){
+      Idattuale = utente.id;
+    }
+  })
+  console.log(currentUser,Idattuale)
   schDash.style.display = 'block';
 }
 
 preferitiNavBtn.onclick = () => {
+  schTappe.style.display = "none";
   console.log("click preferiti");
   schPreferiti.style.display = 'block';  
   schHome.style.display = 'none';
@@ -131,6 +143,7 @@ preferitiNavBtn.onclick = () => {
 }
 
 searchNavBtn.onclick = () => {
+  schTappe.style.display = "none";
   console.log("click search")
   loadFiltrati()
   schSearch.style.display = 'block';
@@ -148,6 +161,11 @@ regBtn.onclick = () => {
 }
 
 addTripBtn.onclick = () => {
+  schTappe.style.display = "none";
+  schHome.style.display = "none";
+  schDash.style.display = "none";
+  schSearch.style.display = "none";
+  schPreferiti.style.display = "none";
   schermataAggiuntaViaggio.style.display = "block"
 }
 searchTripBtn.onclick = () => {
@@ -226,11 +244,11 @@ function load() {
     preferitiList = res;
     console.log(preferitiList)
   })
-  middleware.load_tappe()
+  /*middleware.load_tappe()
   .then(res => {
     tappeList = res;
     console.log(tappeList)
-  })
+  })*/
   middleware.load_utenti()
   .then(res => {
     utentiList = res;
@@ -238,14 +256,18 @@ function load() {
   })
 }
 
+function open_schermata_tappa() {
+  schDash.style.display = "none";
+  schTappe.style.display = "block";
+}
+
 function loadPersonali(){
   middleware.load_viaggi()
     .then(res => {
       viaggiList=res;
-      const viaggiPersonali =[];
       for (let i = 0; i < viaggiList.length; i++){
         const viaggio = viaggiList[i]
-        if (viaggio.id_utente == Idattuale){
+        if (viaggio.id_utente === Idattuale){
           viaggiPersonali.push(viaggio)
         }
       }
@@ -281,11 +303,12 @@ document.getElementById('openViaggioForm').onclick = () => {
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;
-  const data_inizio = "2000/10/10"
+  const data_inizio = new Date().toLocaleDateString(posizione);
+  console.log(data_inizio);
   let finito = false;
-  const data_fine = "2000/10/10"
+  const data_fine = "0001/01/01"
   let id_utente
-  currentUser = "Nicolo"
+  currentUser = "Tommy"
   for (let i = 0; i < utentiList.length; i++) {
   if (utentiList[i].username === currentUser) {
     id_utente = utentiList[i].id;
@@ -339,7 +362,6 @@ document.getElementById('submitTappa').onclick = () => {
 };
 
 window.deleteViaggio = async (id) => {
-  console.log("fatto");
 
   try {
     await middleware.delete_preferito(Idattuale, id);
@@ -348,7 +370,7 @@ window.deleteViaggio = async (id) => {
     const res = await middleware.load_viaggi();
     viaggiList = res;
     const res2 = await middleware.load_preferiti();
-    preferitiList = res;
+    preferitiList = res2;
 
     render();
     
@@ -383,7 +405,7 @@ function render() {
       <div class="viaggio" data-id="${viaggio.id_viaggio}">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
+        <p>Dal: ${viaggio.data_inizio} al: boh</p>
         <div>
           <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
         </div>
@@ -481,15 +503,14 @@ function render_preferiti(preferiti) {
 
 function render_viaggi_personali_temp(viaggiPersonali) {
   ViaggiPersonaliContainer.innerHTML = '';
-  console.log(viaggiPersonali)
   viaggiPersonali.forEach(viaggio => {
-    ViaggiPersonaliContainer.innerHTML += `
+    ViaggiPersonaliContainer.innerHTML = `
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
         <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
         <div>
-          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
+          <button class="elimina_viaggio btn btn-danger btn-sm" id="bottone_elimina">Elimina</button>
         </div>
       </div>
     `;
@@ -499,6 +520,12 @@ function render_viaggi_personali_temp(viaggiPersonali) {
         deleteViaggio(viaggiList[index].id_viaggio);
       };
     });
+    const viaggioBtns = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
+    viaggioBtns.forEach((btn, index) => {
+      btn.onclick = () => {
+        open_schermata_tappa(viaggioBtns[index].id_viaggio);
+      }
+    })
   });
 
 }
