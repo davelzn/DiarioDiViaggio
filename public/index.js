@@ -385,7 +385,6 @@ function render() {
         <p>${viaggio.descrizione}</p>
         <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
         <div>
-          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
           <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
         </div>
       </div>
