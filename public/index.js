@@ -11,6 +11,9 @@ const schSearch = document.getElementById("schermata_search");
 const schPreferiti = document.getElementById("schermata_preferiti");
 const schDash = document.getElementById("schermata_dash");
 const schReg = document.getElementById("schermata_reg");
+const accBtn = document.getElementById("accBtn");
+const loginButton = document.getElementById("openLogin");
+const esitoLog = document.getElementById("schermata_home");
 const schermataAggiuntaViaggio = document.getElementById('schermata_aggiunta_viaggio');
 const userHomeBtn = document.getElementById("userNavHome");
 const homeNavBtn = document.getElementById("homeNavHome");
@@ -34,28 +37,6 @@ createLogin();
 const middleware = createMiddleware();
 load();
 
-function creautente() {
-  const username = 'Tommy';  // Assicurati che 'Nico' sia una stringa
-  const password = 'tommy';  // La password deve essere una stringa (o un numero se vuoi, ma dovresti essere consistente)
-  const email = 'paolettitommaso@itis-molinari.eu'
-  const nuovoUtente = {
-    username,
-    password,
-    email
-
-  };
-
-  middleware.add_utente(nuovoUtente)
-    .then(() => middleware.load_utenti())
-    .then(res => {
-      viaggiList = res;
-      render();
-      clearForm();
-    })
-    .catch(error => {
-      console.error('Errore durante la creazione dell\'utente:', error);
-    });
-}
 
 
 const viaggiContainer = document.querySelector('.viaggi-container');
@@ -69,26 +50,26 @@ let viaggiPersonali = [];
 let Idattuale;
 let current_id_viaggio;
 
-function elmina_tutti_preferiti(){
-  preferitiList.forEach(element => {
-    middleware.delete_preferito(element.id_utente,element.id_viaggio)
-    .then(() => middleware.load_preferiti())
-    .then(res => {
-      preferitiList = res;
-      render();
-    });
-  });
-}
-function elmina_tutti_viaggi(){
-  viaggiList.forEach(element => {
-    middleware.delete_viaggio(element.id_viaggio)
-    .then(() => middleware.load_viaggi())
-    .then(res => {
-      viaggiList = res;
-      render();
-    });
-  });
-}
+// function elmina_tutti_preferiti(){
+//   preferitiList.forEach(element => {
+//     middleware.delete_preferito(element.id_utente,element.id_viaggio)
+//     .then(() => middleware.load_preferiti())
+//     .then(res => {
+//       preferitiList = res;
+//       render();
+//     });
+//   });
+// }
+// function elmina_tutti_viaggi(){
+//   viaggiList.forEach(element => {
+//     middleware.delete_viaggio(element.id_viaggio)
+//     .then(() => middleware.load_viaggi())
+//     .then(res => {
+//       viaggiList = res;
+//       render();
+//     });
+//   });
+// }
 
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
@@ -166,6 +147,13 @@ regBtn.onclick = () => {
   navLogin.style.display = 'none';
   navReg.style.display = 'block';
   schAggiungiTappe.style.display ="none";
+}
+accBtn.onclick = () => {
+  console.log("click reg")
+  schReg.style.display = 'none';
+  schLog.style.display = 'block';
+  navLogin.style.display = 'block';
+  navReg.style.display = 'none';
 }
 
 addTripBtn.onclick = () => {

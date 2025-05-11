@@ -139,6 +139,24 @@ const database = {
             throw new Error("Errore nel recupero delle tappe");
         }
     },
+       filtraLog : async (username, password) => {
+    let sql = `
+        SELECT id, username, password, email
+        FROM utente
+        WHERE username = ? AND password = ?
+    `;
+    try {
+        const result = await executeQuery(sql, [username, password]);
+        if (result.length > 0) {
+            return result[0];
+        } else {
+            return null; 
+        }
+    } catch (err) {
+        console.error("Errore nel recupero dell'utente:", err);
+        throw new Error("Errore nel recupero dell'utente.");
+    }
+},
 
 
     createTable_preferiti: async () => {

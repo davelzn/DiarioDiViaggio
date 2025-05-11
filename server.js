@@ -1,5 +1,7 @@
 const express = require("express");
 const http = require("http");
+const session = require('express-session');
+const crypto = require("crypto");
 const path = require("path");
 const cors = require("cors");
 const mailer = require("./js/mailer.js")
@@ -110,29 +112,51 @@ app.delete("/delete/preferito/:id_utente/:id_viaggio", async (req, res) => {
     await database.delete_preferiti(id_utente, id_viaggio);
     res.json({ result: "ok" });
 });
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: "Username e password obbligatori." });
+    }
+
+    try {
+        const user = await database.filtraLog(username, password);
+        if (user) {
+            console.log(user, " loggato")
+            res.json({ success: true, user });
+        } else {
+            res.json({ success: false, message: "Credenziali non valide." });
+        }
+    } catch (e) {
+        console.error("Errore durante il login:", e);
+        res.status(500).json({ success: false, message: "Errore del server." });
+    }
+});
 
 app.post("/utente", async (req, res) => {
-    const { nome, email } = req.body;
+    console.log(req.body);
+    const { username, email } = req.body;
+    console.log(username)
 
-    if (!nome || !email) {
-        return res.status(400).json({ error: "Nome ed email obbligatori." });
+    if (!username || !email) {
+        return res.status(400).json({ error: "username ed email obbligatori." });
     }
 
     const password = crypto.randomUUID().split('-')[0]; 
 
     try {
         await mailer.send(email, "La tua password di accesso", `La tua password è: ${password}`);
-
-        await database.insertUtente({ nome, email, password });
+        await database.insert_utente({ username, email, password });
 
         res.json({ result: "ok" });
     } catch (e) {
         console.error("Errore nella registrazione:", e);
-        res.status(500).json({ error: "Registrazione fallita" });
-    }
+        res.status(500).json({ error: e.message || "Registrazione fallita" });
+    }
 });
+
 const server = http.createServer(app);
 const port = 5600;
 server.listen(port, () => {
     console.log("- server running on port: " + port);
 });
+

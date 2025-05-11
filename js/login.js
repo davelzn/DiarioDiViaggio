@@ -14,77 +14,89 @@ fetch('conf.json') // carica le variabili da conf.json
     })
     .catch(error => console.error('Errore:', error));
 
-    export const createLogin = () => {
-        const inputName = document.querySelector("#user");
-        const inputPassword = document.querySelector("#psw");
-        const loginButton = document.getElementById("openLogin");
-        const esitoLog = document.getElementById("schermata_home");
-        //const openLoginBtn = document.getElementById("openLogin"); // bottone in basso a destra
-        let isLogged = false;
-        
-        let currentUser = "";
-    
-        const login = (name, password) => {
-            return new Promise((resolve, reject) => {
-                fetch("https://ws.cipiaceinfo.it/credential/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "key": myToken
-                    },
-                    body: JSON.stringify({
-                        username: name,
-                        password: password
-                    })
-                })
-                .then(r => r.json())
-                .then(r => {
-                    resolve(r.result);
-                })
-                .catch(reject);
+export const createLogin = () => {
+    const inputName = document.querySelector("#user");
+    const inputPassword = document.querySelector("#psw");
+    const loginButton = document.getElementById("openLogin");
+    const esitoLog = document.getElementById("schermata_home");
+
+    let isLogged = false;
+    let currentUser = "";
+
+    const login = async (username, password) => {
+        try {
+            const res = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
             });
-        };
-    
-        loginButton.onclick = () => {
-            //console.log("gdvhdgv", inputName, inputPassword);
-    login(inputName.value, inputPassword.value).then(result => {
-        console.log("Login Result:", result); // Log della risposta del server
-        if (result) {
+
+            if (!res.ok) {
+                throw new Error("Errore nella risposta del server");
+            }
+
+            const data = await res.json();
+            console.log("LOGGATOOOOO!")
+            document.getElementById("schermata_login").style.display = 'none';
+            document.getElementById("schermata_dash").style.display = 'block';
+            document.getElementById("schermata_conferma_login").style.display = "block";
+            document.getElementById("navbar_login").style.display = 'none';
+            document.getElementById("userNavHome").value = username;
+            document.getElementById("userNavHome").innerHTML = username;
+            document.getElementById("navbar_homepage").style.display = 'block';
+            return data.result;
+        } catch (err) {
+            console.error("Errore durante il login:", err);
+            return null;
+        }
+    };
+
+    loginButton.onclick = async () => {
+        const name = inputName.value;
+        const password = inputPassword.value;
+
+        if (!name || !password) {
+            esitoLog.innerHTML = '<div class="alert alert-warning">Inserisci username e password</div>';
+            return;
+        }
+
+        const result = await login(name, password);
+
+        if (result === true) {
             isLogged = true;
-            currentUser = inputName.value;
-            console.log("Logged", currentUser);
+            currentUser = name;
+            console.log("Login riuscito:", currentUser);
+
             document.getElementById("schermata_login").style.display = 'none';
             document.getElementById("schermata_dash").style.display = 'block';
             document.getElementById("schermata_conferma_login").style.display = "block";
             document.getElementById("navbar_login").style.display = 'none';
             document.getElementById("userNavHome").value = currentUser;
-            document.getElementById("userNavHome").innerHTML = currentUser
+            document.getElementById("userNavHome").innerHTML = currentUser;
             document.getElementById("navbar_homepage").style.display = 'block';
-
-            //openLoginBtn.innerHTML = currentUser;
+        } else if (result === false) {
+            esitoLog.innerHTML = '<div class="alert alert-danger">Credenziali Errate!</div>';
         } else {
-            esitoLog.innerHTML =
-                '<div class="alert alert-danger">Credenziali Errate!</div>';
+            esitoLog.innerHTML = '<div class="alert alert-danger">Errore durante il login</div>';
         }
-    }).catch(error => {
-        console.error('Errore durante il login:', error);
-        esitoLog.innerHTML =
-            '<div class="alert alert-danger">Si è verificato un errore durante il login!</div>';
-    });
-};
-    
-        return {
-            isLogged: () => isLogged,
-            currentUser: () => currentUser
-        };
     };
+
+    return {
+        isLogged: () => isLogged,
+        currentUser: () => currentUser
+    };
+};
+
     
     
 export function registraUtente() {
-  const nome = document.getElementById("userR").value;
+  const username = document.getElementById("userR").value;
+  console.log(username)
   const email = document.getElementById("email").value;
 
-  if (!nome || !email) {
+  if (!username || !email) {
     alert("Compila tutti i campi!");
     return;
   }
@@ -92,13 +104,12 @@ export function registraUtente() {
   fetch("/utente", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, email })
+    body: JSON.stringify({ username, email })
   })
     .then(res => res.json())
     .then(data => {
       if (data && data.result === "ok") {
         alert("Registrazione completata! Controlla la tua email per la password.");
-        closeRegisterModal();
       } else {
         alert("Errore nella registrazione: " + (data.message || "Dati non validi."));
       }

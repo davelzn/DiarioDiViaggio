@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const conf = require('./conf.js');  
+const conf = require('../public/conf.js');
+
 const transporter = nodemailer.createTransport({
   host: conf.smtpHost,
   port: conf.smtpPort,
@@ -10,13 +11,11 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-
 transporter.verify((err, success) => {
   if (err) {
-    console.error(err);
+    console.error("Errore verifica SMTP:", err);
   } else {
     console.log('Configurazione di nodemailer corretta!');
-    
   }
 });
 
@@ -24,7 +23,7 @@ const result = {
   send: async (email, subject, text) => {
     try {
       return await transporter.sendMail({
-        from: conf.from,  
+        from: conf.mailFrom, 
         to: email,
         subject: subject,
         text: text
@@ -32,6 +31,7 @@ const result = {
     } catch (error) {
       console.log("Errore nell'invio dell'email:");
       console.log(error);
+      throw error;
     }
   },
   test: async () => {
@@ -39,4 +39,4 @@ const result = {
   }
 };
 
-module.exports=result;
+module.exports = result;
