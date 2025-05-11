@@ -325,6 +325,13 @@ textarea {
     padding: 20px;
     padding-bottom: 80px;
 }
+.viaggi-personali-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 80px;
+}
+
 
 #regBtn {
     color:#00A8E8;

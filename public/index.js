@@ -22,6 +22,7 @@ const sendReg = document.getElementById("sendReg");
 const addTripBtn = document.getElementById("addTrip");
 const searchTripBtn = document.getElementById("searchTrip");
 const viaggiPreferitiContainer = document.getElementById("viaggi_preferiti_container");
+const ViaggiPersonaliContainer = document.getElementById("viaggi_personali_container")
 const posizione = 'it-IT';
 let isLogged = false;
 
@@ -55,7 +56,7 @@ creautente()
 */
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
-const ViaggiPersonaliContainer = document.querySelector('.viaggi-personali-container')
+
 let viaggiList = [];
 let tappeList = [];
 let utentiList = [];
@@ -98,6 +99,7 @@ userHomeBtn.onclick = () => {
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
   schPreferiti.style.display='none';
+  render_viaggi_personali_temp()
 }
 homeNavBtn.onclick = () => {
   console.log("click home")
@@ -253,9 +255,6 @@ function loadFiltrati(searchText) {
     });
 }
 
-function aggiungi_viaggio(titolo,descrizione,data_inizio,data_fine){
-  
-}
 
 /*
 document.getElementById('openViaggioForm').onclick = () => {
@@ -385,9 +384,12 @@ function render() {
     const idViaggio = card.getAttribute('data-id');
 
     const btnElimina = card.querySelector('.elimina_viaggio');
-    btnElimina.onclick = () => {
-      deleteViaggio(idViaggio);
-    };
+    if (btnElimina) {
+      btnElimina.onclick = () => {
+        deleteViaggio(idViaggio);
+      };
+    }
+
 
     const btnPreferito = card.querySelector('.aggiungi_preferito');
     if (btnPreferito) {
@@ -415,8 +417,6 @@ function render() {
     }
   });
 }
-
-
 
 function render_filtrati(viaggiFiltrati) {
   viaggiFiltratiContainer.innerHTML = '';
@@ -463,6 +463,30 @@ function render_preferiti(preferiti) {
       loadViaggiPreferiti(); 
     };
   });
+}
+
+function render_viaggi_personali_temp() {
+  ViaggiPersonaliContainer.innerHTML = '';
+  console.log(viaggiList)
+  viaggiList.forEach(viaggio => {
+    ViaggiPersonaliContainer.innerHTML += `
+      <div class="viaggio">
+        <h5>${viaggio.titolo}</h5>
+        <p>${viaggio.descrizione}</p>
+        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
+        <div>
+          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
+        </div>
+      </div>
+    `;
+    const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
+    eliminaBtns.forEach((btn, index) => {
+      btn.onclick = () => {
+        deleteViaggio(viaggiList[index].id_viaggio);
+      };
+    });
+  });
+
 }
 
 function clearForm() {
