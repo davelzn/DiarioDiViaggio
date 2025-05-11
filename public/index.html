@@ -67,7 +67,13 @@
             </div>
         </div>
 
-
+        <div class="schermata_aggiunta_tappa" id="schermata_aggiunta_tappa" style="display:none;">
+            <label for="titoloTappa">Titolo</label>
+            <input id="titoloTappa" type="text" required>
+            <label for="descrizioneTappa">Descrizione</label>
+            <textarea id="descrizioneTappa" class="form-control" rows="3" required></textarea>
+            <button id="submitTappa">Salva</button>
+        </div>
         <div class="schermata_aggiunta_viaggio" id="schermata_aggiunta_viaggio" style="display:none;">
             <label for="titolo">Titolo</label>
             <input id="titolo" type="text" required>
@@ -84,9 +90,9 @@
         </div>
         <div class="schermata_tappe" id="schermata_tappe">
             <div class="titolo" id="titolo_modale_informazioni"></div>
-            <div class="descrizione" id="descrizione_modale_informazioni">descrizione</div>
-            <div class="immagini" id="immagini_modale_informazioni">immagini</div>
-            <div class="data" id="datainizio_modale_informazioni">data inizio</div>
+            <button id="aggiungi_tappa">+</button>
+            <div class="tappe-container" id="tappe_container"></div>
+
         </div>
     </div>
     <!-- NAVBAR -->
@@ -110,7 +116,6 @@
             <p id="sendReg">Registrati</p>
         </div>
     </div>
-    <div id="submitTappa"></div>
     <script type="module" src="index.js"></script>
 </body>
 </html>

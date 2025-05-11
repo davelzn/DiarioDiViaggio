@@ -9,7 +9,7 @@ const app = express();
 database.createTable_viaggio();
 database.createTable_utente()
 database.createTable_preferiti();
-
+database.createTable_tappa();
 app.use(express.json());
 
 app.use(cors());
@@ -33,7 +33,7 @@ app.post("/insert/viaggio", async (req, res) => {
     }
 });
 
-app.post("/insert/tappe", async (req, res) => {
+app.post("/insert/tappa", async (req, res) => {
     const tappa = req.body.tappa;
     try {
         await database.insert_tappa(tappa);
@@ -97,6 +97,11 @@ app.get('/', (req, res) => {
 
 app.delete("/delete/:id", async (req, res) => {
     await database.delete(req.params.id);
+    res.json({ result: "ok" });
+   
+});
+app.delete("/delete/tappa/:id", async (req, res) => {
+    await database.delete_tappa(req.params.id);
     res.json({ result: "ok" });
    
 });

@@ -24,6 +24,9 @@ const searchTripBtn = document.getElementById("searchTrip");
 const viaggiPreferitiContainer = document.getElementById("viaggi_preferiti_container");
 const ViaggiPersonaliContainer = document.getElementById("viaggi_personali_container");
 const schTappe = document.getElementById("schermata_tappe");
+const schAggiungiTappe = document.getElementById("schermata_aggiunta_tappa");
+const aggTappa = document.getElementById("aggiungi_tappa")
+const Tappecontainer = document.getElementById("tappe_container")
 const posizione = 'en-CA';//YYYY/MM/DD
 let isLogged = false;
 
@@ -64,7 +67,8 @@ let utentiList = [];
 let preferitiList = [];
 let viaggiPersonali = [];
 let Idattuale;
-/*
+let current_id_viaggio;
+
 function elmina_tutti_preferiti(){
   preferitiList.forEach(element => {
     middleware.delete_preferito(element.id_utente,element.id_viaggio)
@@ -85,7 +89,7 @@ function elmina_tutti_viaggi(){
     });
   });
 }
-*/
+
 navAccedi.onclick = () => {
   navAccedi.style.display = "none";
   navLogin.style.display = "flex";
@@ -101,6 +105,7 @@ userHomeBtn.onclick = () => {
   schHome.style.display = 'none';
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
+  schAggiungiTappe.style.display ="none";
   schPreferiti.style.display='none';
   loadPersonali()
 }
@@ -112,6 +117,7 @@ homeNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = "none";
   schDash.style.display = 'none';
   schSearch.style.display = 'none';
+  schAggiungiTappe.style.display ="none";
   schPreferiti.style.display='none';
 }
 
@@ -138,8 +144,8 @@ preferitiNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = 'none';
   schDash.style.display = 'none';
   schSearch.style.display= 'none';
-  const ut = 2
-  loadViaggiPreferiti(ut); 
+  schAggiungiTappe.style.display ="none";
+  loadViaggiPreferiti(Idattuale); 
 }
 
 searchNavBtn.onclick = () => {
@@ -150,6 +156,7 @@ searchNavBtn.onclick = () => {
   schermataAggiuntaViaggio.style.display = "none";
   schHome.style.display = 'none'
   schDash.style.display = 'none';
+  schAggiungiTappe.style.display ="none";
   schPreferiti.style.display='none';
 }
 regBtn.onclick = () => {
@@ -158,6 +165,7 @@ regBtn.onclick = () => {
   schLog.style.display = 'none';
   navLogin.style.display = 'none';
   navReg.style.display = 'block';
+  schAggiungiTappe.style.display ="none";
 }
 
 addTripBtn.onclick = () => {
@@ -167,10 +175,15 @@ addTripBtn.onclick = () => {
   schSearch.style.display = "none";
   schPreferiti.style.display = "none";
   schermataAggiuntaViaggio.style.display = "block"
+  schAggiungiTappe.style.display ="none";
 }
 searchTripBtn.onclick = () => {
   const searchText = document.getElementById('searchInput').value.toLowerCase();
+  
   loadFiltrati(searchText)
+}
+aggTappa.onclick = () => {
+  open_schermata_aggiunta_tappa()
 }
 /*sendReg.onclick = async () => {
   const email = document.getElementById("email").value;
@@ -244,24 +257,68 @@ function load() {
     preferitiList = res;
     console.log(preferitiList)
   })
-  /*middleware.load_tappe()
+  middleware.load_tappe()
   .then(res => {
     tappeList = res;
     console.log(tappeList)
-  })*/
+  })
   middleware.load_utenti()
   .then(res => {
     utentiList = res;
     console.log(utentiList)
   })
 }
-
+function open_schermata_aggiunta_tappa(){
+  schTappe.style.display = "none"
+  schAggiungiTappe.style.display ="block";
+}
 function open_schermata_tappa() {
+  render_tappe()
   schDash.style.display = "none";
   schTappe.style.display = "block";
+  schAggiungiTappe.style.display ="none";
 }
+function render_tappe() {
+  middleware.load_tappe()
+    .then(res => {
+      const tappeList = res;
+      console.log(tappeList);
+      let html = '';
+
+      tappeList.forEach(tappa => {
+        if (current_id_viaggio === tappa.id_viaggio) {
+          html += `
+            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
+              <h5>${tappa.titolo}</h5>
+              <p>${tappa.descrizione}</p>
+              <p>Dal: ${tappa.data} al: boh</p>
+              <button class="elimina_tappa">Elimina</button>
+            </div>
+          `;
+        }
+      });
+      console.log(html)
+      Tappecontainer.innerHTML = html;
+
+      const cards = document.querySelectorAll('.tappa');
+      cards.forEach(card => {
+        const idtappa = card.getAttribute('data-id');
+
+      const eliminaBtns = Tappecontainer.querySelectorAll(".elimina_tappa");
+      eliminaBtns.forEach((btn, index) => {
+        btn.onclick = () => {
+            console.log("cliccato")
+            console.log(tappeList[index].id_tappa)
+            deleteTappa(tappeList[index].id_tappa);
+      };
+      });
+    });
+  })
+}
+    
 
 function loadPersonali(){
+  viaggiPersonali = []
   middleware.load_viaggi()
     .then(res => {
       viaggiList=res;
@@ -274,6 +331,7 @@ function loadPersonali(){
       console.log(viaggiPersonali)
       render_viaggi_personali_temp(viaggiPersonali)
     })
+  
 }
 function loadFiltrati(searchText) {
   middleware.load_viaggi()
@@ -299,7 +357,32 @@ document.getElementById('openViaggioForm').onclick = () => {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
   */
+document.getElementById('submitTappa').onclick = () =>{
+  const titolo = document.getElementById('titoloTappa').value;
+  const descrizione = document.getElementById('descrizioneTappa').value;
+  const data = new Date().toLocaleDateString(posizione);
+  let id_viaggio = current_id_viaggio
+  console.log(current_id_viaggio)
+  console.log(id_viaggio)
+  if(!titolo || !descrizione || !data){
+    return
+  }
+  const nuovaTappa = {
+    titolo,
+    descrizione,
+    data,
+    id_viaggio
+  }
 
+  middleware.add_tappa(nuovaTappa)
+    .then(() => middleware.load_tappe())
+    .then(res => {
+      tappeList = res;
+      render();
+      clearForm();
+    });
+
+}
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;
@@ -308,7 +391,7 @@ document.getElementById('submitViaggio').onclick = () => {
   let finito = false;
   const data_fine = "0001/01/01"
   let id_utente
-  currentUser = "Tommy"
+  currentUser = document.getElementById("userNavHome").value;
   for (let i = 0; i < utentiList.length; i++) {
   if (utentiList[i].username === currentUser) {
     id_utente = utentiList[i].id;
@@ -337,30 +420,6 @@ document.getElementById('submitViaggio').onclick = () => {
     });
 };
 
-document.getElementById('submitTappa').onclick = () => {
-  const titolo = document.getElementById('titolo').value;
-  const descrizione = document.getElementById('descrizione').value;
-  const data = document.getElementById('data').value;
-  if (!titolo || !descrizione || !data_inizio || !data_fine) {
-    return;
-  }
-
-  const nuovoTappa = {
-    titolo,
-    descrizione,
-    data,
-    id_viaggio: 1
-  };
-
-  middleware.add_tappa(nuovoTappa)
-    .then(() => middleware.load_tappe())
-    .then(res => {
-      tappeList = res;
-      render();
-      clearForm();
-    });
-};
-
 window.deleteViaggio = async (id) => {
 
   try {
@@ -380,6 +439,7 @@ window.deleteViaggio = async (id) => {
 };
 
 window.deleteTappa = (id) => {
+  console.log(id)
   middleware.delete_tappa(id)
   .then(() => middleware.load_tappe())
   .then(res => {
@@ -431,7 +491,7 @@ function render() {
     if (btnPreferito) {
       btnPreferito.onclick = async () => {
         let id_utente;
-        currentUser = "Nicolo";
+        currentUser = document.getElementById("userNavHome").value;
         for (let i = 0; i < utentiList.length; i++) {
           if (utentiList[i].username === currentUser) {
             id_utente = utentiList[i].id;
@@ -502,9 +562,9 @@ function render_preferiti(preferiti) {
 }
 
 function render_viaggi_personali_temp(viaggiPersonali) {
-  ViaggiPersonaliContainer.innerHTML = '';
+  let html = ''
   viaggiPersonali.forEach(viaggio => {
-    ViaggiPersonaliContainer.innerHTML = `
+    html += `
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
@@ -514,6 +574,7 @@ function render_viaggi_personali_temp(viaggiPersonali) {
         </div>
       </div>
     `;
+    ViaggiPersonaliContainer.innerHTML = html
     const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
     eliminaBtns.forEach((btn, index) => {
       btn.onclick = () => {
@@ -523,7 +584,10 @@ function render_viaggi_personali_temp(viaggiPersonali) {
     const viaggioBtns = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
     viaggioBtns.forEach((btn, index) => {
       btn.onclick = () => {
-        open_schermata_tappa(viaggioBtns[index].id_viaggio);
+        current_id_viaggio = viaggiPersonali[index].id_viaggio
+        console.log(current_id_viaggio)
+        console.log(viaggiPersonali[index])
+        open_schermata_tappa();
       }
     })
   });

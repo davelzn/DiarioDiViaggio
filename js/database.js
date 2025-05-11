@@ -21,7 +21,6 @@ const executeQuery = (sql, par = []) => {
         });
     });
 };
-
 const database = {
     createTable_utente: async () => {
         await executeQuery(`
@@ -107,31 +106,28 @@ const database = {
                 titolo VARCHAR(100),
                 descrizione TEXT,
                 data DATE,
-                id_viaggio VARCHAR(20),
-                id_utente INT,
-                FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio),
-                FOREIGN KEY (id_utente) REFERENCES utente(id)
+                id_viaggio INT,
+                CONSTRAINT fk_tappa_viaggio FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio)
             )
         `);
     },
 
     insert_tappa : async (tappa) => {
         let sql =`
-            INSERT INTO tappa (titolo, descrizione, data,id_viaggio, id_utente)
-            VALUES (?,?,?,?,?)
+            INSERT INTO tappa (titolo, descrizione, data,id_viaggio)
+            VALUES (?,?,?,?)
         `;
         return await executeQuery(sql, [
             tappa.titolo,
             tappa.descrizione,
             tappa.data,
             tappa.id_viaggio,
-            tappa.id_utente
         ]);
     },
 
     select_tappe: async () => {
         let sql = `
-            SELECT id_tappa, titolo, descrizione, data, id_viaggio, id_utente
+            SELECT id_tappa, titolo, descrizione, data, id_viaggio
             FROM tappa
         `;
         try {

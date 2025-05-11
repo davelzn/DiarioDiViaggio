@@ -28,7 +28,7 @@ export const createMiddleware = () => {
     return json;
     },
     delete_tappa: async (id) => {
-      const response = await fetch("/delete/tappa" + id, {
+      const response = await fetch("/delete/tappa/" + id, {
         method: 'DELETE',
       });
       const json = await response.json();
