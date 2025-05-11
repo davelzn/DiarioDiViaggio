@@ -99,7 +99,7 @@ userHomeBtn.onclick = () => {
   schDash.style.display = 'block';
   schSearch.style.display = 'none';
   schPreferiti.style.display='none';
-  render_viaggi_personali_temp()
+  loadPersonali()
 }
 homeNavBtn.onclick = () => {
   console.log("click home")
@@ -238,6 +238,21 @@ function load() {
   })
 }
 
+function loadPersonali(){
+  middleware.load_viaggi()
+    .then(res => {
+      viaggiList=res;
+      const viaggiPersonali =[];
+      for (let i = 0; i < viaggiList.length; i++){
+        const viaggio = viaggiList[i]
+        if (viaggio.id_utente == Idattuale){
+          viaggiPersonali.push(viaggio)
+        }
+      }
+      console.log(viaggiPersonali)
+      render_viaggi_personali_temp(viaggiPersonali)
+    })
+}
 function loadFiltrati(searchText) {
   middleware.load_viaggi()
     .then(res => {
@@ -465,10 +480,10 @@ function render_preferiti(preferiti) {
   });
 }
 
-function render_viaggi_personali_temp() {
+function render_viaggi_personali_temp(viaggiPersonali) {
   ViaggiPersonaliContainer.innerHTML = '';
-  console.log(viaggiList)
-  viaggiList.forEach(viaggio => {
+  console.log(viaggiPersonali)
+  viaggiPersonali.forEach(viaggio => {
     ViaggiPersonaliContainer.innerHTML += `
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
