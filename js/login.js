@@ -22,6 +22,7 @@ export const createLogin = () => {
 
     let isLogged = false;
     let currentUser = "";
+    let currentUserId = null; 
 
     const login = async (username, password) => {
         try {
@@ -38,15 +39,25 @@ export const createLogin = () => {
             }
 
             const data = await res.json();
-            console.log("LOGGATOOOOO!")
-            document.getElementById("schermata_login").style.display = 'none';
-            document.getElementById("schermata_dash").style.display = 'block';
-            document.getElementById("schermata_conferma_login").style.display = "block";
-            document.getElementById("navbar_login").style.display = 'none';
-            document.getElementById("userNavHome").value = username;
-            document.getElementById("userNavHome").innerHTML = username;
-            document.getElementById("navbar_homepage").style.display = 'block';
-            return data.result;
+            console.log("Risposta dal server:", data);
+
+            if (data.success && data.user) {
+                currentUser = data.user.username;
+                currentUserId = data.user.id;
+                console.log("LOGGATOOOOO!");
+
+                document.getElementById("schermata_login").style.display = 'none';
+                document.getElementById("schermata_dash").style.display = 'block';
+                document.getElementById("schermata_conferma_login").style.display = "block";
+                document.getElementById("navbar_login").style.display = 'none';
+                document.getElementById("userNavHome").value = currentUser;
+                document.getElementById("userNavHome").innerHTML = currentUser;
+                document.getElementById("navbar_homepage").style.display = 'block';
+
+                return true;
+            } else {
+                return false;
+            }
         } catch (err) {
             console.error("Errore durante il login:", err);
             return null;
@@ -66,7 +77,6 @@ export const createLogin = () => {
 
         if (result === true) {
             isLogged = true;
-            currentUser = name;
             console.log("Login riuscito:", currentUser);
 
             document.getElementById("schermata_login").style.display = 'none';
@@ -85,7 +95,8 @@ export const createLogin = () => {
 
     return {
         isLogged: () => isLogged,
-        currentUser: () => currentUser
+        currentUser: () => currentUser,
+        currentUserId: () => currentUserId 
     };
 };
 
