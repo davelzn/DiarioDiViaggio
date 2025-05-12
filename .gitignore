@@ -4,3 +4,5 @@ LICENSE
 ca.pem
 prod.ca.pem
 prod.conf.json
+conf.js
+prod.conf.js
