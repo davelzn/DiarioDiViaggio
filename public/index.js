@@ -202,12 +202,13 @@ function render_tappe() {
       let html = '';
 
       tappeList.forEach(tappa => {
-        if (current_id_viaggio === tappa.id_viaggio) {
+        console.log("TAPPPAAAAAA", current_id_viaggio, tappa.id_viaggio)
+        if (current_id_viaggio == tappa.id_viaggio) {
           html += `
             <div class="viaggio tappa" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
-              <p>Dal: ${tappa.data} al: boh</p>
+              <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
               <button class="elimina_tappa">Elimina</button>
             </div>
           `;
@@ -227,6 +228,7 @@ function render_tappe() {
             //console.log("I TaPPA", idtappa)
             console.log(tappeList[index].id_tappa)
             deleteTappa(tappeList[index].id_tappa);
+            mostraS(schDash)
       };
       });
     });
@@ -508,6 +510,7 @@ function render_viaggi_personali_temp(viaggiPersonali) {
       const id = div.getAttribute('data-id');  
       current_id_viaggio = id;
       console.log("Apro schermata tappa per ID:", id);
+      render_tappe();
       open_schermata_tappa();
     }
   });
