@@ -50,26 +50,7 @@ let viaggiPersonali = [];
 let Idattuale;
 let current_id_viaggio;
 
-// function elmina_tutti_preferiti(){
-//   preferitiList.forEach(element => {
-//     middleware.delete_preferito(element.id_utente,element.id_viaggio)
-//     .then(() => middleware.load_preferiti())
-//     .then(res => {
-//       preferitiList = res;
-//       render();
-//     });
-//   });
-// }
-// function elmina_tutti_viaggi(){
-//   viaggiList.forEach(element => {
-//     middleware.delete_viaggio(element.id_viaggio)
-//     .then(() => middleware.load_viaggi())
-//     .then(res => {
-//       viaggiList = res;
-//       render();
-//     });
-//   });
-// }
+
 
 navAccedi.onclick = () => {
   mostraS(schLog);
@@ -143,30 +124,7 @@ function mostraN(navbar) {
   navbars.forEach(el => el.style.display = "none");
   navbar.style.display = "block"; 
 }
-/*sendReg.onclick = async () => {
-  const email = document.getElementById("email").value;
-  const username = document.getElementById("userR").value;
-  const password = document.getElementById("pswR").value;
 
-  if (!email || !username || !password) {
-    alert("Compila tutti i campi");
-    return;
-  }
-
-  try {
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, username, password }),
-    });
-
-    const data = await res.json();
-    alert(data.message);
-  } catch (err) {
-    alert("Errore nella registrazione");
-    console.error(err);
-  }
-}*/
 sendReg.onclick = () =>{
   registraUtente();
 }
@@ -376,13 +334,14 @@ document.getElementById('submitViaggio').onclick = () => {
     .then(res => {
       viaggiList = res;
       render();
+      mostraS(schHome)
       clearForm();
     });
 };
 
 window.deleteViaggio = async (id) => {
-
   try {
+    console.log(id, Idattuale)
     await middleware.delete_preferito(Idattuale, id);
     await middleware.delete_viaggio(id);
 
@@ -392,14 +351,14 @@ window.deleteViaggio = async (id) => {
     preferitiList = res2;
 
     render();
-    
+    //render_viaggi_personali_temp();
   } catch (error) {
     console.error("Errore durante l'eliminazione:", error);
   }
 };
 
 window.deleteTappa = (id) => {
-  console.log(id)
+  console.log("ID VIAGGIO", id)
   middleware.delete_tappa(id)
   .then(() => middleware.load_tappe())
   .then(res => {
@@ -411,7 +370,6 @@ window.deleteTappa = (id) => {
 
 function render() {
   let html = '';
-
   viaggiList.forEach(viaggio => {
     let isPreferito = false;
     for (let i = 0; i < preferitiList.length; i++) {
@@ -425,7 +383,7 @@ function render() {
       <div class="viaggio" data-id="${viaggio.id_viaggio}">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal: ${viaggio.data_inizio} al: boh</p>
+        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
         <div>
           <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
         </div>
@@ -442,13 +400,14 @@ function render() {
     const btnElimina = card.querySelector('.elimina_viaggio');
     if (btnElimina) {
       btnElimina.onclick = () => {
+        console.log("ID VIAGGIO ", idViaggio)
         deleteViaggio(idViaggio);
       };
     }
 
 
     const btnPreferito = card.querySelector('.aggiungi_preferito');
-    if (btnPreferito) {
+    if (btnPreferito) { 
       btnPreferito.onclick = async () => {
         let id_utente;
         currentUser = document.getElementById("userNavHome").value;
@@ -488,12 +447,6 @@ function render_filtrati(viaggiFiltrati) {
       </div>
     `;
     const eliminaBtns = viaggiFiltratiContainer.querySelectorAll(".elimina_viaggio");
-    eliminaBtns.forEach((btn, index) => {
-      btn.onclick = () => {
-        deleteViaggio(viaggiList[index].id_viaggio);
-        mostraS(schDash);
-      };
-    });
   });
 
 }
@@ -523,36 +476,41 @@ function render_preferiti(preferiti) {
 }
 
 function render_viaggi_personali_temp(viaggiPersonali) {
-  let html = ''
-  viaggiPersonali.forEach(viaggio => {
+  let html = '';
+
+  viaggiPersonali.forEach((viaggio) => {
     html += `
-      <div class="viaggio">
+      <div class="viaggio" data-id="${viaggio.id_viaggio}">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
+        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
         <div>
-          <button class="elimina_viaggio btn btn-danger btn-sm" id="bottone_elimina">Elimina</button>
+          <button class="btn btn-danger btn-sm elimina_viaggio" data-id="${viaggio.id_viaggio}">Elimina</button>
         </div>
       </div>
     `;
-    ViaggiPersonaliContainer.innerHTML = html
-    const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
-    eliminaBtns.forEach((btn, index) => {
-      btn.onclick = () => {
-        deleteViaggio(viaggiList[index].id_viaggio);
-      };
-    });
-    const viaggioBtns = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
-    viaggioBtns.forEach((btn, index) => {
-      btn.onclick = () => {
-        current_id_viaggio = viaggiPersonali[index].id_viaggio
-        console.log(current_id_viaggio)
-        console.log(viaggiPersonali[index])
-        open_schermata_tappa();
-      }
-    })
+  });
+  ViaggiPersonaliContainer.innerHTML = html;
+  const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
+  
+  eliminaBtns.forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.getAttribute('data-id');
+      console.log("Elimino viaggio con ID:", id);
+      deleteViaggio(id);
+    }
   });
 
+  const viaggioDivs = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
+  
+  viaggioDivs.forEach(div => {
+    div.onclick = () => {
+      const id = div.getAttribute('data-id');  
+      current_id_viaggio = id;
+      console.log("Apro schermata tappa per ID:", id);
+      open_schermata_tappa();
+    }
+  });
 }
 
 function clearForm() {
