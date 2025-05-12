@@ -181,7 +181,6 @@ function load() {
   middleware.load_utenti()
   .then(res => {
     utentiList = res;
-    console.log(utentiList)
   })
 }
 function open_schermata_aggiunta_tappa(){
@@ -394,7 +393,18 @@ function render() {
   });
 
   viaggiContainer.innerHTML = html;
-
+  const viaggioDivs = viaggiContainer.querySelectorAll(".viaggio");
+  
+  viaggioDivs.forEach(div => {
+    div.onclick = () => {
+      const id = div.getAttribute('data-id');  
+      current_id_viaggio = id;
+      console.log("Apro schermata tappa per ID:", id);
+      mostraS(schTappe)
+      render_tappe();
+      open_schermata_tappa();
+    }
+  });
   const cards = document.querySelectorAll('.viaggio');
   cards.forEach(card => {
     const idViaggio = card.getAttribute('data-id');
@@ -403,6 +413,7 @@ function render() {
     if (btnElimina) {
       btnElimina.onclick = () => {
         console.log("ID VIAGGIO ", idViaggio)
+        
         deleteViaggio(idViaggio);
       };
     }
@@ -499,6 +510,12 @@ function render_viaggi_personali_temp(viaggiPersonali) {
     btn.onclick = () => {
       const id = btn.getAttribute('data-id');
       console.log("Elimino viaggio con ID:", id);
+      tappeList.forEach( tappa => {
+        if ( tappa.id_viaggio == id){
+          console.log("TATATA", tappa.id_tappa)
+          deleteTappa(tappa.id_tappa)
+        }
+      })
       deleteViaggio(id);
     }
   });

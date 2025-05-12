@@ -158,6 +158,12 @@ header {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     color: #333333;
   }
+  .show{
+    display: block;
+  }
+  .hidden {
+    display: none;
+  }
   
   .schermata_aggiunta_viaggio h5 {
     font-size: 22px;
