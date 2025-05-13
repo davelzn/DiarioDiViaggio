@@ -1,7 +1,9 @@
-import { createLogin, registraUtente } from "../js/login.js";
+import { createLogin } from "../js/login.js";
 import { createMiddleware } from "../js/middleware.js";
+import { registraUtente } from "../js/register.js";
 let currentUser;
 const navAccedi = document.getElementById("navbar_accedi");
+const navHome = document.getElementById("navbar_homepage")
 const navLogin = document.getElementById("navbar_login");
 const navReg = document.getElementById("navbar_reg");
 const schEmbr = document.getElementById("schermata_embrionale");
@@ -33,15 +35,14 @@ const Tappecontainer = document.getElementById("tappe_container")
 const posizione = 'en-CA';//YYYY/MM/DD
 let isLogged = false;
 
-createLogin();
+const login = createLogin();
 const middleware = createMiddleware();
-load();
 
 
 
 const viaggiContainer = document.querySelector('.viaggi-container');
 const viaggiFiltratiContainer = document.querySelector('.viaggi-filtrati-container');
-
+load();
 let viaggiList = [];
 let tappeList = [];
 let utentiList = [];
@@ -50,7 +51,23 @@ let viaggiPersonali = [];
 let Idattuale;
 let current_id_viaggio;
 
-
+loginButton.onclick = () => {
+  currentUser = document.getElementById("user").value;
+  const logged = login.login(document.getElementById("user").value, document.getElementById("psw").value)
+  .then( result => {
+    if (result !== false){
+      mostraS(schHome);
+      mostraN(navHome);
+      userHomeBtn.innerHTML = currentUser;
+    }
+  })
+  utentiList.forEach(utente =>{
+    console.log(utente.username,currentUser)
+    if (utente.username === currentUser){
+      Idattuale = utente.id;
+    }
+  })
+}
 
 navAccedi.onclick = () => {
   mostraS(schLog);
@@ -64,23 +81,9 @@ userHomeBtn.onclick = () => {
   loadPersonali()
 }
 homeNavBtn.onclick = () => {
-  console.log("click home")
+  //console.log("click home")
   document.getElementById("schermata_conferma_login").style.display = "none"
-  mostraS(schHome)
-}
-
-document.getElementById("ok_acceduto").onclick = () => {
-  loadPersonali()
-  ViaggiPersonaliContainer.style.display = "block";
-  document.getElementById("schermata_conferma_login").style.display = "none"
-  currentUser = document.getElementById("userNavHome").value;
-  utentiList.forEach(utente =>{
-    if (utente.username === currentUser){
-      Idattuale = utente.id;
-    }
-  })
-  console.log(currentUser,Idattuale)
-  schDash.style.display = 'block';
+  mostraS(schHome);
 }
 
 preferitiNavBtn.onclick = () => {
@@ -240,6 +243,7 @@ function loadPersonali(){
   middleware.load_viaggi()
     .then(res => {
       viaggiList=res;
+      console.log(Idattuale)
       for (let i = 0; i < viaggiList.length; i++){
         const viaggio = viaggiList[i]
         if (viaggio.id_utente === Idattuale){
@@ -278,6 +282,8 @@ document.getElementById('openViaggioForm').onclick = () => {
 document.getElementById('submitTappa').onclick = () =>{
   const titolo = document.getElementById('titoloTappa').value;
   const descrizione = document.getElementById('descrizioneTappa').value;
+  const immagine = document.getElementById("imageUpload").value;
+  console.log(immagine)
   const data = new Date().toLocaleDateString(posizione);
   let id_viaggio = current_id_viaggio
   console.log(current_id_viaggio)
@@ -310,7 +316,6 @@ document.getElementById('submitViaggio').onclick = () => {
   let finito = false;
   const data_fine = "0001/01/01"
   let id_utente
-  currentUser = document.getElementById("userNavHome").value;
   for (let i = 0; i < utentiList.length; i++) {
   if (utentiList[i].username === currentUser) {
     id_utente = utentiList[i].id;
@@ -370,81 +375,25 @@ window.deleteTappa = (id) => {
 
 
 function render() {
-  let html = '';
-  viaggiList.forEach(viaggio => {
-    let isPreferito = false;
-    for (let i = 0; i < preferitiList.length; i++) {
-      if (preferitiList[i].id_viaggio === viaggio.id_viaggio) {
-        isPreferito = true;
-        break;
-      }
-    }
-
-    html += `
-      <div class="viaggio" data-id="${viaggio.id_viaggio}">
-        <h5>${viaggio.titolo}</h5>
-        <p>${viaggio.descrizione}</p>
-        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
-        <div>
-          <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
-        </div>
-      </div>
-    `;
-  });
-
-  viaggiContainer.innerHTML = html;
-  const viaggioDivs = viaggiContainer.querySelectorAll(".viaggio");
-  
-  viaggioDivs.forEach(div => {
-    div.onclick = () => {
-      const id = div.getAttribute('data-id');  
-      current_id_viaggio = id;
-      console.log("Apro schermata tappa per ID:", id);
-      mostraS(schTappe)
-      render_tappe();
-      open_schermata_tappa();
-    }
-  });
-  const cards = document.querySelectorAll('.viaggio');
-  cards.forEach(card => {
-    const idViaggio = card.getAttribute('data-id');
-
-    const btnElimina = card.querySelector('.elimina_viaggio');
-    if (btnElimina) {
-      btnElimina.onclick = () => {
-        console.log("ID VIAGGIO ", idViaggio)
-        
-        deleteViaggio(idViaggio);
-      };
-    }
+  middleware.load_tappe()
+  .then(res => {
+    const tappeList = res;
+    tappeList.reverse();
+    let html = '';
+    tappeList.forEach(tappa => {
+          html += `
+            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
+              <h5>${tappa.titolo}</h5>
+              <p>${tappa.descrizione}</p>
+              <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
+            </div>
+          `;
+      });
+      viaggiContainer.innerHTML = html;
+    })
+  };
 
 
-    const btnPreferito = card.querySelector('.aggiungi_preferito');
-    if (btnPreferito) { 
-      btnPreferito.onclick = async () => {
-        let id_utente;
-        currentUser = document.getElementById("userNavHome").value;
-        for (let i = 0; i < utentiList.length; i++) {
-          if (utentiList[i].username === currentUser) {
-            id_utente = utentiList[i].id;
-            break;
-          }
-        }
-        const nuovoPreferito = {
-          id_viaggio: idViaggio,
-          id_utente: id_utente
-        };
-        middleware.add_preferito(nuovoPreferito)
-        .then(() => middleware.load_preferiti())
-        .then(res => {
-          preferitiList = res;
-          render();
-          clearForm();
-        });
-      };
-    }
-  });
-}
 
 function render_filtrati(viaggiFiltrati) {
   viaggiFiltratiContainer.innerHTML = '';
