@@ -6,6 +6,11 @@
 
 }
 
+.viaggio{
+    border-radius: 30px;
+    width: 80%;
+
+}
 /* Stile generale */
 body {
     margin: 0;
@@ -20,13 +25,15 @@ body {
 
 /* Header */
 header {
+    position:fixed;
+    width: 100%;
     text-align: center;
     padding: 20px 10px 5px;
     font-weight: bold;
     font-size: 28px;
     background-color: var(--blu);
     color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .subtitle {
@@ -38,7 +45,7 @@ header {
 /* Lista viaggi */
 .viaggi-container {
     text-align: left;
-    background-color: #ffffff;
+    background-color: var(--verde);
     border-radius: 16px;
     padding: 30px;
     max-width: 400px;
@@ -47,7 +54,7 @@ header {
 }
 .viaggi-personali-container {
     text-align: left;
-    background-color: #ffffff;
+    background-color: var(--verde);
     border-radius: 16px;
     padding: 30px;
     max-width: 400px;
@@ -57,10 +64,9 @@ header {
 
 /* Navbar */
 .navbar_homepage {
-    display:flex;
+    display: flex;
+    justify-content: space-around; /* distribuisce lo spazio */
     align-items: center;
-    justify-content: center;
-    gap: 100px;
     padding: 10px 0;
     background-color: white;
     position: fixed;
@@ -71,6 +77,12 @@ header {
     border-top: 1px solid #e0e0e0;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     height: 60px;
+}
+
+.nav_item {
+    flex: 1;              /* ogni icona si prende lo stesso spazio */
+    text-align: center;   /* la centra dentro il suo spazio */
+    font-size: 24px;
 }
 
 .navbar_homepage button {
@@ -98,7 +110,7 @@ header {
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;
-    background-color: #ffffff;
+    background-color: var(--blu);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -115,7 +127,7 @@ header {
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;
-    background-color: #ffffff;
+    background-color: var(--blu);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -143,11 +155,31 @@ header {
 /* Schermate */
 .schermata_home,
 .schermata_search,
-.schermata_dash{
+.schermata_dash,
+.schermata_aggiunta_viaggio,
+.schermata_tappe,
+.schermata_preferiti{
     text-align: center;
     display: none;
     padding: 20px;
 }
+
+.schermata_home,
+.schermata_login,
+.schermata_conferma_login,
+.schermata_search,
+.schermata_dash,
+.schermata_aggiunta_viaggio,
+.schermata_tappe,
+.schermata_preferiti,
+.schermata_embrionale{
+    margin-top: 60px;
+    text-align: center;
+    padding: 20px;
+}
+
+
+
 .schermata_aggiunta_viaggio {
     display: none;
     background-color: #ffffff;
@@ -219,6 +251,7 @@ header {
     padding: 30px;
 }
 
+
 .funny_symbol {
     margin-top: 30px;
     font-size: 100px;
@@ -263,7 +296,7 @@ button:active {
 /* Modal Dettaglio Viaggio */
 .schermata_tappe {
     display: none;
-    background-color: #ffffff;
+    background-color: var(--verde);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -277,7 +310,7 @@ button:active {
 }
 
 .container_conferma_login {
-    background-color: #ffffff;
+    background-color: var(--verde);
     border-radius: 20px;
     justify-content: center;
     display: block;
@@ -293,7 +326,7 @@ button:active {
 /* Container Generale */
 .container{
     text-align: left;
-    background-color: white;
+    background-color: var(--verde);
     border-radius: 16px;
     padding: 30px;
     max-width: 400px;
@@ -320,18 +353,21 @@ textarea {
 
 /* Lista viaggi */
 .viaggi-container {
+    background-color: var(--verde);
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     padding-bottom: 80px;
 }
 .viaggi-filtrati-container {
+    background-color: var(--verde);
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     padding-bottom: 80px;
 }
 .viaggi-personali-container {
+    background-color: var(--verde);
     flex: 1;
     overflow-y: auto;
     padding: 20px;
@@ -342,10 +378,11 @@ textarea {
 
 
 #regBtn {
-    color:#00A8E8;
+    color:var(--verde);
 }
 
 .viaggi-preferiti-container {
+    background-color: var(--verde);
   flex: 1;
   overflow-y: auto;
   padding: 20px;

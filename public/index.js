@@ -62,7 +62,6 @@ loginButton.onclick = () => {
     }
   })
   utentiList.forEach(utente =>{
-    console.log(utente.username,currentUser)
     if (utente.username === currentUser){
       Idattuale = utente.id;
     }
@@ -207,7 +206,7 @@ function render_tappe() {
         console.log("TAPPPAAAAAA", current_id_viaggio, tappa.id_viaggio)
         if (current_id_viaggio == tappa.id_viaggio) {
           html += `
-            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
+            <div class="viaggio" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
               <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
@@ -286,8 +285,6 @@ document.getElementById('submitTappa').onclick = () =>{
   console.log(immagine)
   const data = new Date().toLocaleDateString(posizione);
   let id_viaggio = current_id_viaggio
-  console.log(current_id_viaggio)
-  console.log(id_viaggio)
   if(!titolo || !descrizione || !data){
     return
   }
@@ -382,7 +379,7 @@ function render() {
     let html = '';
     tappeList.forEach(tappa => {
           html += `
-            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
+            <div class="viaggio" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
               <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
