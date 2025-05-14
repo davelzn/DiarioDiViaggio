@@ -199,34 +199,42 @@ function render_tappe() {
   middleware.load_tappe()
     .then(res => {
       const tappeList = res;
+      console.log(tappeList);
       let html = '';
 
       tappeList.forEach(tappa => {
+        console.log("TAPPPAAAAAA", current_id_viaggio, tappa.id_viaggio)
         if (current_id_viaggio == tappa.id_viaggio) {
           html += `
-            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
+            <div class="viaggio" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
               <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
-              ${tappa.immagine ? `<img src="${tappa.immagine}" alt="Foto Tappa" style="max-width: 100%; margin-top: 10px; border-radius: 8px;">` : ''}
               <button class="elimina_tappa">Elimina</button>
             </div>
           `;
         }
       });
-
+      console.log(html)
       Tappecontainer.innerHTML = html;
+
+      const cards = document.querySelectorAll('.tappa');
+      cards.forEach(card => {
+        const idtappa = card.getAttribute('data-id');
 
       const eliminaBtns = Tappecontainer.querySelectorAll(".elimina_tappa");
       eliminaBtns.forEach((btn, index) => {
         btn.onclick = () => {
-          deleteTappa(tappeList[index].id_tappa);
-          mostraS(schDash);
-        };
+            //console.log("cliccato")
+            //console.log("I TaPPA", idtappa)
+            console.log(tappeList[index].id_tappa)
+            deleteTappa(tappeList[index].id_tappa);
+            mostraS(schDash)
+      };
       });
     });
+  })
 }
-
     
 
 function loadPersonali(){
@@ -270,35 +278,54 @@ document.getElementById('openViaggioForm').onclick = () => {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
   */
-document.getElementById('submitTappa').onclick = function() {
+document.getElementById('submitTappa').onclick = async () => {
   const titolo = document.getElementById('titoloTappa').value;
   const descrizione = document.getElementById('descrizioneTappa').value;
-  const inputFile = document.getElementById("imageUpload");
-  const file = inputFile.files[0];
-  const data = new Date().toLocaleDateString(posizione);
+  const imageFile = document.getElementById("imageUpload").files[0];
+  const data = new Date().toLocaleDateString();
   const id_viaggio = current_id_viaggio;
 
-  if (!titolo || !descrizione || !data || !file) {
-    console.log("Campi obbligatori mancanti");
-    return;
-  }
+  if (!titolo || !descrizione || !imageFile || !data) return;
 
+  // Upload immagine a Cloudinary
   const formData = new FormData();
-  formData.append("titolo", titolo);
-  formData.append("descrizione", descrizione);
-  formData.append("data", data);
-  formData.append("id_viaggio", id_viaggio);
-  formData.append("immagine", file); // aggiunta corretta del file
+  formData.append("file", imageFile);
+  formData.append("upload_preset", "tappe_unsigned"); 
 
-  middleware.add_tappa(formData)
-    .then(() => middleware.load_tappe())
-    .then(res => {
-      tappeList = res;
-      render_tappe();
-      mostraS(schDash);
-      clearForm();
+  try {
+    const response = await fetch("https://api.cloudinary.com/v1_1/nidamato/image/upload", {
+      method: "POST",
+      body: formData
     });
-}
+
+    const cloudinaryData = await response.json();
+
+    const immagine_url = cloudinaryData.secure_url;
+
+    const nuovaTappa = {
+      titolo,
+      descrizione,
+      data,
+      immagine: immagine_url,
+      id_viaggio
+    };
+
+    console.log("Nuova tappa:", JSON.stringify(nuovaTappa, null, 2));
+
+    await middleware.add_tappa(nuovaTappa);
+    const res = await middleware.load_tappe();
+    tappeList = res;
+    render();
+    mostraS(schDash);
+    clearForm();
+
+  } catch (err) {
+    console.error("Errore nel caricamento su Cloudinary:", err);
+  }
+};
+
+  
+
 
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;

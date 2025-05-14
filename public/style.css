@@ -172,7 +172,8 @@ header {
 .schermata_aggiunta_viaggio,
 .schermata_tappe,
 .schermata_preferiti,
-.schermata_embrionale{
+.schermata_embrionale,
+.schermata_aggiunta_tappa{
     margin-top: 60px;
     text-align: center;
     padding: 20px;
