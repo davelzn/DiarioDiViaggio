@@ -199,42 +199,34 @@ function render_tappe() {
   middleware.load_tappe()
     .then(res => {
       const tappeList = res;
-      console.log(tappeList);
       let html = '';
 
       tappeList.forEach(tappa => {
-        console.log("TAPPPAAAAAA", current_id_viaggio, tappa.id_viaggio)
         if (current_id_viaggio == tappa.id_viaggio) {
           html += `
-            <div class="viaggio" data-id="${tappa.id_tappa}">
+            <div class="viaggio tappa" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
               <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
+              ${tappa.immagine ? `<img src="${tappa.immagine}" alt="Foto Tappa" style="max-width: 100%; margin-top: 10px; border-radius: 8px;">` : ''}
               <button class="elimina_tappa">Elimina</button>
             </div>
           `;
         }
       });
-      console.log(html)
-      Tappecontainer.innerHTML = html;
 
-      const cards = document.querySelectorAll('.tappa');
-      cards.forEach(card => {
-        const idtappa = card.getAttribute('data-id');
+      Tappecontainer.innerHTML = html;
 
       const eliminaBtns = Tappecontainer.querySelectorAll(".elimina_tappa");
       eliminaBtns.forEach((btn, index) => {
         btn.onclick = () => {
-            //console.log("cliccato")
-            //console.log("I TaPPA", idtappa)
-            console.log(tappeList[index].id_tappa)
-            deleteTappa(tappeList[index].id_tappa);
-            mostraS(schDash)
-      };
+          deleteTappa(tappeList[index].id_tappa);
+          mostraS(schDash);
+        };
       });
     });
-  })
 }
+
     
 
 function loadPersonali(){
@@ -278,33 +270,36 @@ document.getElementById('openViaggioForm').onclick = () => {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
   */
-document.getElementById('submitTappa').onclick = () =>{
+document.getElementById('submitTappa').onclick = function() {
   const titolo = document.getElementById('titoloTappa').value;
   const descrizione = document.getElementById('descrizioneTappa').value;
-  const immagine = document.getElementById("imageUpload").value;
-  console.log(immagine)
+  const inputFile = document.getElementById("imageUpload");
+  const file = inputFile.files[0];
   const data = new Date().toLocaleDateString(posizione);
-  let id_viaggio = current_id_viaggio
-  if(!titolo || !descrizione || !data){
-    return
-  }
-  const nuovaTappa = {
-    titolo,
-    descrizione,
-    data,
-    id_viaggio
+  const id_viaggio = current_id_viaggio;
+
+  if (!titolo || !descrizione || !data || !file) {
+    console.log("Campi obbligatori mancanti");
+    return;
   }
 
-  middleware.add_tappa(nuovaTappa)
+  const formData = new FormData();
+  formData.append("titolo", titolo);
+  formData.append("descrizione", descrizione);
+  formData.append("data", data);
+  formData.append("id_viaggio", id_viaggio);
+  formData.append("immagine", file); // aggiunta corretta del file
+
+  middleware.add_tappa(formData)
     .then(() => middleware.load_tappe())
     .then(res => {
       tappeList = res;
-      render();
-      mostraS(schDash)
+      render_tappe();
+      mostraS(schDash);
       clearForm();
     });
-
 }
+
 document.getElementById('submitViaggio').onclick = () => {
   const titolo = document.getElementById('titolo').value;
   const descrizione = document.getElementById('descrizione').value;

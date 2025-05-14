@@ -4,6 +4,7 @@ const session = require('express-session');
 const crypto = require("crypto");
 const path = require("path");
 const cors = require("cors");
+const multer = require('multer');
 const mailer = require("./js/mailer.js")
 const database = require("./js/database");
 const app = express();
@@ -19,6 +20,17 @@ app.use(cors());
 app.use('/js', express.static('js'));
 
 app.use("/", express.static(path.join(__dirname, "public")));
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + path.extname(file.originalname);
+    cb(null, uniqueSuffix);
+  }
+});
+
+const upload = multer({ storage });
 
 app.post('/api/login', (req, res) => {
     res.json({ success: true });
@@ -35,16 +47,21 @@ app.post("/insert/viaggio", async (req, res) => {
     }
 });
 
-app.post("/insert/tappa", async (req, res) => {
-    const tappa = req.body.tappa;
-    try {
-        await database.insert_tappa(tappa);
-        res.json({ result: "ok" });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ result: "ok" })
-    }
+app.post("/insert/tappa", upload.single("immagine"), async (req, res) => {
+  const { titolo, descrizione, data, id_viaggio } = req.body;
+  const immagine = "/uploads/" + req.file.filename;
+
+  const tappa = { titolo, descrizione, data, immagine, id_viaggio };
+
+  try {
+    await database.add_tappa(tappa);
+    res.json({ result: "ok" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ result: "error" });
+  }
 });
+
 
 app.post("/insert/preferito", async (req, res) => {
     const preferito = req.body.preferito;

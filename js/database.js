@@ -35,11 +35,10 @@ const database = {
 
     insert_utente: async (utente) => {
         let sql = `
-            INSERT INTO utente (id,username,password,email)
-            VAlues (?,?,?,?)
+            INSERT INTO utente (username,password,email)
+            VALUES (?,?,?)
         `;
         await executeQuery(sql,[
-            utente.id,
             utente.username,
             utente.password,
             utente.email
@@ -106,6 +105,7 @@ const database = {
                 titolo VARCHAR(100),
                 descrizione TEXT,
                 data DATE,
+                immagine VARCHAR(200),
                 id_viaggio INT,
                 CONSTRAINT fk_tappa_viaggio FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio)
             )
@@ -114,13 +114,14 @@ const database = {
 
     insert_tappa : async (tappa) => {
         let sql =`
-            INSERT INTO tappa (titolo, descrizione, data,id_viaggio)
-            VALUES (?,?,?,?)
+            INSERT INTO tappa (titolo, descrizione, data, immagine, id_viaggio)
+            VALUES (?,?,?,?,?)
         `;
         return await executeQuery(sql, [
             tappa.titolo,
             tappa.descrizione,
             tappa.data,
+            tappa.immagine,
             tappa.id_viaggio,
         ]);
     },
