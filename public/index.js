@@ -465,8 +465,17 @@ tappeList.forEach(tappa => {
         const idViaggio = card.getAttribute('data-id');
         const btnPreferito = card.querySelector('.aggiungi_preferito');
 
-        if (btnPreferito && !btnPreferito.disabled) {
+        if (btnPreferito) {
           btnPreferito.onclick = () => {
+            let giaPreferito = false;
+            for (let k = 0; k < preferitiList.length; k++) {
+              if (preferitiList[k].id_viaggio === idViaggio) {
+                giaPreferito = true;
+                break;
+              }
+            }
+            if (giaPreferito) return;
+
             const nuovoPreferito = {
               id_viaggio: idViaggio,
               id_utente: Idattuale
