@@ -1,392 +1,471 @@
-/* Legenda dei colori per favore utilizzate questi se dovete proprio toccare qualcosa così ha tutto un senso pls */
-:root{
-    --verde : #06D6A0;
-    --giallo : #FFD166;
-    --blu : #00A8E8;
-
+/* Reset base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
 }
 
-.viaggio{
-    border-radius: 30px;
-    width: 80%;
-
-}
-/* Stile generale */
+/* Corpo */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #F5F5F5;
-    color: #333333;
+  background: #e6f0ff; /* azzurro chiaro */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Header */
 header {
-    position:fixed;
-    width: 100%;
-    text-align: center;
-    padding: 20px 10px 5px;
-    font-weight: bold;
-    font-size: 28px;
-    background-color: var(--blu);
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  background: #007bff; /* azzurro vivo */
+  color: white;
+  text-align: center;
+  padding: 18px 0;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 1.2px;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,123,255,0.3);
 }
 
-.subtitle {
-    font-size: 16px;
-    color: #3a535d;
-    margin-top: 5px;
+header .subtitle {
+  font-weight: 400;
+  font-size: 1rem;
+  opacity: 0.85;
+  margin-top: 4px;
 }
 
-/* Lista viaggi */
-.viaggi-container {
-    text-align: left;
-    background-color: var(--verde);
-    border-radius: 16px;
-    padding: 30px;
-    max-width: 400px;
-    margin: 30px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+/* Container principale schermate */
+#schermata {
+  width: 100%;
+  max-width: 480px;
+  margin: 20px auto 80px;
+  padding: 0 15px;
 }
-.viaggi-personali-container {
-    text-align: left;
-    background-color: var(--verde);
-    border-radius: 16px;
-    padding: 30px;
-    max-width: 400px;
-    margin: 30px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+/* Schermate generali */
+.schermata_embrionale, 
+.schermata_login, 
+.schermata_reg, 
+.schermata_home, 
+.schermata_dash, 
+.schermata_search, 
+.schermata_preferiti,
+.schermata_aggiunta_tappa,
+.schermata_aggiunta_viaggio,
+.schermata_conferma_login,
+.schermata_tappe {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,123,255,0.25);
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  user-select: none;
+}
+
+/* Funny symbol */
+.funny_symbol {
+  font-size: 4rem;
+  color: #007bff;
+  margin-bottom: 12px;
+  user-select: none;
+  text-align: center;
+}
+
+/* Label + input */
+label {
+  display: block;
+  font-weight: 600;
+  margin: 12px 0 6px;
+  color: #004a99;
+}
+
+input[type="text"], input[type="password"], input[type="email"], textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.8px solid #007bff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background: #f0f8ff;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  border-color: #004a99;
+  background: #e0f0ff;
+}
+
+/* Pulsanti */
+button, #regBtn, #accBtn {
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+button:hover, #regBtn:hover, #accBtn:hover {
+  background: #0056b3;
+}
+
+#regBtn, #accBtn {
+  background: transparent;
+  color: #007bff;
+  font-weight: 600;
+  padding: 6px 0;
+  margin-top: 10px;
+}
+
+#regBtn:hover, #accBtn:hover {
+  text-decoration: underline;
+  background: transparent;
+}
+
+/* Container class */
+.container {
+  margin-top: 15px;
+}
+
+/* Paragraphs in login/register */
+p {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 12px;
+  user-select: none;
 }
 
 /* Navbar */
-.navbar_homepage {
-    display: flex;
-    justify-content: space-around; /* distribuisce lo spazio */
-    align-items: center;
-    padding: 10px 0;
-    background-color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    border-top: 1px solid #e0e0e0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px;
-}
-
-.nav_item {
-    flex: 1;              /* ogni icona si prende lo stesso spazio */
-    text-align: center;   /* la centra dentro il suo spazio */
-    font-size: 24px;
-}
-
-.navbar_homepage button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: var(--blu);
-    cursor: pointer;
-    padding: 10px;
-    transition: all 0.2s ease-in-out;
-}
-
-.navbar_homepage button:hover {
-    color: white;
-    transform: scale(1.1);
-}
-
-.navbar_homepage button:active {
-    transform: scale(0.95);
-}
-
-
-.navbar_login {
-    display: none;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    background-color: var(--blu);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    border-top: 1px solid #e0e0e0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px;
-}
-
-
-.navbar_accedi {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    background-color: var(--blu);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    border-top: 1px solid #e0e0e0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px;
-}
-
-
-.hidden {
-    display: none;
-}
-
-.visible {
-    display: block;
-}
-  
-.titolo{
-    margin-top: 5%;
-    font-size: 40px;
-  }
-
-/* Schermate */
-.schermata_home,
-.schermata_search,
-.schermata_dash,
-.schermata_aggiunta_viaggio,
-.schermata_tappe,
-.schermata_preferiti{
-    text-align: center;
-    display: none;
-    padding: 20px;
+.navbar_accedi, .navbar_login {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 480px;
+  background: #007bff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  box-shadow: 0 -2px 8px rgba(0,123,255,0.6);
+  z-index: 20;
+  user-select: none;
+  border-radius: 12px 12px 0 0;
 }
 
 .schermata_home,
-.schermata_login,
-.schermata_conferma_login,
 .schermata_search,
+.navbar_login,
 .schermata_dash,
-.schermata_aggiunta_viaggio,
 .schermata_tappe,
-.schermata_preferiti,
-.schermata_embrionale,
-.schermata_aggiunta_tappa{
-    margin-top: 60px;
-    text-align: center;
-    padding: 20px;
-}
-
-
-
-.schermata_aggiunta_viaggio {
-    display: none;
-    background-color: #ffffff;
-    padding: 30px 20px;
-    border-radius: 16px;
-    max-width: 500px;
-    margin: 30px auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    color: #333333;
-  }
-  .show{
-    display: block;
-  }
-  .hidden {
-    display: none;
-  }
-  
-  .schermata_aggiunta_viaggio h5 {
-    font-size: 22px;
-    color: var(--blu);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .schermata_aggiunta_viaggio label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    margin-top: 16px;
-    color: var(--blu);
-  }
-  
-  .schermata_aggiunta_viaggio input,
-  .schermata_aggiunta_viaggio textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  
-  .schermata_aggiunta_viaggio textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  .schermata_aggiunta_viaggio button {
-    margin-top: 20px;
-    width: 100%;
-    background-color: var(--giallo);
-    color: #333333;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.1s ease-in-out;
-  }
-  
 .schermata_login{
     display: none;
-    text-align: center;
-    padding: 30px;
 }
-.schermata_embrionale {
-    text-align: center;
-    padding: 30px;
+
+.navbar_homepage {
+    display: none;
+  background-color: #004a99;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }
 
 
-.funny_symbol {
-    margin-top: 30px;
-    font-size: 100px;
-    color: var(--verde);
+
+#userNavHome {
+  width: 34px;
+  height: 34px;
+  background: url('https://via.placeholder.com/34/007bff/ffffff?text=U') no-repeat center center;
+  background-size: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
 }
 
-/* Titoli e Paragrafi */
+.navbar_accedi, .navbar_login {
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* Viaggi containers */
+.viaggi-container,
+.viaggi-personali-container,
+.viaggi-filtrati-container,
+.viaggi-preferiti-container,
+.tappe-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+/* Viaggio item */
+.viaggi-container > div,
+.viaggi-personali-container > div,
+.viaggi-filtrati-container > div,
+.viaggi-preferiti-container > div,
+.tappe-container > div {
+  background: #e6f0ff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  user-select: none;
+}
+
+.viaggi-container > div:hover,
+.viaggi-personali-container > div:hover,
+.viaggi-filtrati-container > div:hover,
+.viaggi-preferiti-container > div:hover,
+.tappe-container > div:hover {
+  box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+}
+
+/* Titoli modale e bottoni aggiunta */
 .titolo {
-    font-size: 32px;
-    margin: 20px 0;
-    text-align: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #004a99;
+  margin-bottom: 10px;
+  user-select: none;
 }
 
-p {
-    margin: 10px 0;
-    font-size: 14px;
-    line-height: 1.4;
-    padding: 10px;
+#aggiungi_tappa {
+  background: #007bff;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  user-select: none;
+  transition: background-color 0.3s ease;
 }
 
-/* Bottoni */
-button {
-    background-color: var(--giallo);
-    color: #333333;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+#aggiungi_tappa:hover {
+  background: #0056b3;
 }
 
-button:hover {
-    background-color: var(--verde);
-    transform: scale(1.1);
+/* Image preview */
+#preview {
+  display: block;
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,123,255,0.3);
 }
 
-button:active {
-    transform: scale(0.95);
+/* Scrollbar custom (chrome, edge) */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Modal Dettaglio Viaggio */
-.schermata_tappe {
-    display: none;
-    background-color: var(--verde);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: 20px;
+::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 10px;
 }
 
-.schermata_conferma_login {
-    background-color: #ffffff;
-    padding: 30px;
-    display: none;
+::-webkit-scrollbar-track {
+  background: #e6f0ff;
 }
 
-.container_conferma_login {
-    background-color: var(--verde);
-    border-radius: 20px;
-    justify-content: center;
-    display: block;
+/* Responsive */
+@media (max-width: 520px) {
+  #schermata {
+    margin: 10px 10px 80px;
+    padding: 0 10px;
+  }
+  
+  header {
+    font-size: 1.5rem;
+  }
 }
 
-.close {
-    font-size: 24px;
-    cursor: pointer;
-    float: right;
-    color: #888;
+/* CARD BASE (usata in tutte le schermate) */
+.viaggio, .viaggio-card {
+  background: #f0f8ff;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 123, 255, 0.15);
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  user-select: none;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Container Generale */
-.container{
-    text-align: left;
-    background-color: var(--verde);
-    border-radius: 16px;
-    padding: 30px;
-    max-width: 400px;
-    margin: 30px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.viaggio:hover, .viaggio-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35);
+  transform: translateY(-3px);
 }
 
-.container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
+/* IMMAGINE Tappa (solo .viaggio-card) */
+.viaggio-card {
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
 }
 
-.container input,
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+.viaggio-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
-
-/* Lista viaggi */
-.viaggi-container {
-    background-color: var(--verde);
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    padding-bottom: 80px;
-}
-.viaggi-filtrati-container {
-    background-color: var(--verde);
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    padding-bottom: 80px;
-}
-.viaggi-personali-container {
-    background-color: var(--verde);
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    padding-bottom: 80px;
-    display: none;
-
-}
-
-
-#regBtn {
-    color:var(--verde);
-}
-
-.viaggi-preferiti-container {
-    background-color: var(--verde);
+/* Contenuto accanto immagine */
+.viaggio-content {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+.viaggio-titolo, .viaggio h5 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #004a99;
+  margin-bottom: 6px;
+  user-select: text;
+}
+
+.viaggio-descrizione, .viaggio p {
+  font-size: 0.9rem;
+  color: #222;
+  margin-bottom: 6px;
+  user-select: text;
+}
+
+.viaggio-date, .viaggio p:last-child {
+  font-size: 0.8rem;
+  color: #555;
+  user-select: text;
+}
+
+/* BOTTONE elimina / rimuovi */
+.viaggio button,
+.viaggio .btn {
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  align-self: flex-start;
+  user-select: none;
+}
+
+/* Pulsante elimina tappo */
+.elimina_tappa {
+  background-color: #ff4d4d;
+  color: white;
+  box-shadow: 0 2px 6px rgba(255, 77, 77, 0.6);
+}
+
+.elimina_tappa:hover {
+  background-color: #cc0000;
+}
+
+/* Pulsanti elimina viaggio */
+.elimina_viaggio, 
+.rimuovi_preferito {
+  background-color: #ff6666;
+  color: white;
+  box-shadow: 0 2px 6px rgba(255, 102, 102, 0.6);
+}
+
+.elimina_viaggio:hover,
+.rimuovi_preferito:hover {
+  background-color: #cc0000;
+}
+
+/* SCHERMATA HOME (.viaggio-card) */
+#viaggi_container .viaggio-card {
+  margin-bottom: 20px;
+}
+
+/* SCHERMATA TAPPE (.viaggio) */
+#tappe_container .viaggio {
+  background: #dbe9ff;
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 3px 12px rgba(0, 123, 255, 0.2);
+  cursor: default;
+}
+
+/* SCHERMATA UTENTE (.viaggio) */
+#viaggi_personali_container .viaggio {
+  background: #c1d9ff;
+  padding: 18px 22px;
+  box-shadow: 0 3px 14px rgba(0, 123, 255, 0.25);
+  cursor: default;
+}
+
+/* SCHERMATA PREFERITI (.viaggio) */
+#viaggi_preferiti_container .viaggio {
+  background: #a6c8ff;
+  padding: 18px 22px;
+  box-shadow: 0 4px 16px rgba(0, 123, 255, 0.3);
+  cursor: default;
+}
+
+/* SCHERMATA RICERCA (.viaggio) */
+#viaggi_filtrati_container .viaggio {
+  background: #cce4ff;
+  padding: 16px 20px;
+  box-shadow: 0 3px 10px rgba(0, 123, 255, 0.22);
+  cursor: default;
+}
+
+/* Pulsanti dentro contenitori (allineamento) */
+#viaggi_personali_container .viaggio button,
+#viaggi_preferiti_container .viaggio button,
+#viaggi_filtrati_container .viaggio button {
+  align-self: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .viaggio-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .viaggio-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+}

@@ -128,7 +128,7 @@ const database = {
 
     select_tappe: async () => {
         let sql = `
-            SELECT id_tappa, titolo, descrizione, data, id_viaggio
+            SELECT id_tappa, titolo, descrizione, data, immagine, id_viaggio
             FROM tappa
         `;
         try {
