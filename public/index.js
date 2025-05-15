@@ -52,6 +52,12 @@ let Idattuale;
 let current_id_viaggio;
 
 loginButton.onclick = () => {
+  const username = document.getElementById("user").value;
+  const password = document.getElementById("psw").value;
+  if (username === "" || password === "") {
+    alert("Inserisci sia username che password.");
+    return;
+  }
   currentUser = document.getElementById("user").value;
   const logged = login.login(document.getElementById("user").value, document.getElementById("psw").value)
   .then( result => {
@@ -418,30 +424,68 @@ tappeList.forEach(tappa => {
     })
   };
 
-  function render_viaggio(id){
-    middleware.load_viaggi()
-    .then(res => {
-    const viaggiList = res;
-    viaggiList.reverse();
-    console.log(viaggiList);
-    let html = '';          
-    viaggiList.forEach(viaggio =>{
-      if (viaggio.id_viaggio == id){
-        html += `
-      <div class="viaggio-card" data-id="${viaggio.id_viaggio}">
-        <div class="viaggio-content">
-          <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
-          <p class="viaggio-descrizione">${viaggio.descrizione}</p>
-          <p class="viaggio-date">Dal: ${viaggio.data_inizio} al: boh</p>
-        </div>
-      </div>
-    `;
+  const render_viaggio = (id) => {
+  middleware.load_viaggi()
+    .then((res) => {
+      const viaggiList = res;
+      viaggiList.reverse();
+      console.log(viaggiList);
+      let html = '';          
+
+      for (let i = 0; i < viaggiList.length; i++) {
+        const viaggio = viaggiList[i];
+        let isPreferito = false;
+
+        for (let j = 0; j < preferitiList.length; j++) {
+          if (preferitiList[j].id_viaggio === viaggio.id_viaggio) {
+            isPreferito = true;
+            break;
+          }
+        }
+
+        if (viaggio.id_viaggio == id) {
+          html += `
+            <div class="viaggio-card" data-id="${viaggio.id_viaggio}">
+              <div class="viaggio-content">
+                <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
+                <p class="viaggio-descrizione">${viaggio.descrizione}</p>
+                <p class="viaggio-date">Dal: ${viaggio.data_inizio} al: boh</p>
+                <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
+              </div>
+            </div>
+          `;
+        }
       }
-      })
-      viaggiContainer.innerHTML= "";
+
+      viaggiContainer.innerHTML = "";
       viaggiContainer.innerHTML = html;
-    }
-    )};
+
+      const card = document.querySelector('.viaggio-card');
+      if (card) {
+        const idViaggio = card.getAttribute('data-id');
+        const btnPreferito = card.querySelector('.aggiungi_preferito');
+
+        if (btnPreferito && !btnPreferito.disabled) {
+          btnPreferito.onclick = () => {
+            const nuovoPreferito = {
+              id_viaggio: idViaggio,
+              id_utente: Idattuale
+            };
+
+            middleware.add_preferito(nuovoPreferito)
+              .then(() => middleware.load_preferiti())
+              .then((res) => {
+                preferitiList = res;
+                render_viaggio(id);
+                clearForm();
+              });
+          };
+        }
+      }
+    });
+};
+
+
 
 
 function render_filtrati(viaggiFiltrati) {
