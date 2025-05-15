@@ -80,6 +80,7 @@ userHomeBtn.onclick = () => {
 }
 homeNavBtn.onclick = () => {
   //console.log("click home")
+  render();
   mostraS(schHome);
 }
 
@@ -207,31 +208,30 @@ function render_tappe() {
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
               <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
-              <button class="elimina_tappa">Elimina</button>
+              <button id="el-${tappa.id_tappa}" class="elimina_tappa">Elimina</button>
             </div>
           `;
         }
       });
+      //console.log(html)
       Tappecontainer.innerHTML = html;
-
-      const cards = document.querySelectorAll('.tappa');
-      cards.forEach(card => {
-        const idtappa = card.getAttribute('data-id');
-
-      const eliminaBtns = Tappecontainer.querySelectorAll(".elimina_tappa");
-      console.log(eliminaBtns);
-      eliminaBtns.forEach((btn, index) => {
-        btn.onclick = () => {
-            console.log("cliccato")
-            console.log(tappeList[index].id_tappa)
-            deleteTappa(tappeList[index].id_tappa);
-            mostraS(schDash)
-      };
-      });
-      
+      tappeList.forEach((tappa)=>{
+        if (current_id_viaggio == tappa.id_viaggio){
+          //console.log("el-" + tappa.id_tappa)
+          const btn = document.getElementById("el-" + tappa.id_tappa);
+          //console.log(btn)
+          if (btn) {
+          btn.onclick = () => {
+            // console.log("cliccato");
+            // console.log(tappa.id_tappa);
+            deleteTappa(tappa.id_tappa);
+            mostraS(schDash);
+          }
+          }
+        }
+      })
     });
-  })
-}
+  }
     
 
 function loadPersonali(){
@@ -400,20 +400,55 @@ function render() {
     console.log(tappeList)                            
     tappeList.forEach(tappa => {
           html += `
-            <div class="viaggio-card" data-id="${tappa.id_tappa}">
+            <div class="viaggio-card" data-id="${tappa.id_viaggio}">
               <img class="viaggio-img" src="${tappa.immagine}" alt="Immagine tappa">
               <div class="viaggio-content">
                 <h5 class="viaggio-titolo">${tappa.titolo}</h5>
                 <p class="viaggio-descrizione">${tappa.descrizione}</p>
-                <p class="viaggio-date">Dal: ${tappa.data.split('T')[0]} al: boh</p>
+                <p class="viaggio-date">Dal: ${tappa.data.split('T')[0]}</p>
               </div>
             </div>
           `;
+          
       });
+      viaggiContainer.innerHTML = "";
       viaggiContainer.innerHTML = html;
+      const tappeDivs = viaggiContainer.querySelectorAll(".viaggio-card");
+      //console.log(tappeDivs)
+      tappeDivs.forEach(div => {
+        div.onclick = () => {
+          const id = div.getAttribute('data-id');  
+          console.log("Apro schermata viaggio per ID:", id);
+          render_viaggio(id);
+        }
+      });
     })
   };
 
+  function render_viaggio(id){
+    middleware.load_viaggi()
+    .then(res => {
+    const viaggiList = res;
+    viaggiList.reverse();
+    console.log(viaggiList);
+    let html = '';          
+    viaggiList.forEach(viaggio =>{
+      if (viaggio.id_viaggio == id){
+        html += `
+      <div class="viaggio-card" data-id="${viaggio.id_viaggio}">
+        <div class="viaggio-content">
+          <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
+          <p class="viaggio-descrizione">${viaggio.descrizione}</p>
+          <p class="viaggio-date">Dal: ${viaggio.data_inizio} al: boh</p>
+        </div>
+      </div>
+    `;
+      }
+      })
+      viaggiContainer.innerHTML= "";
+      viaggiContainer.innerHTML = html;
+    }
+    )};
 
 
 function render_filtrati(viaggiFiltrati) {
@@ -491,7 +526,6 @@ function render_viaggi_personali_temp(viaggiPersonali) {
   });
 
   const viaggioDivs = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
-  
   viaggioDivs.forEach(div => {
     div.onclick = () => {
       const id = div.getAttribute('data-id');  
