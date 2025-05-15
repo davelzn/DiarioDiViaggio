@@ -480,41 +480,38 @@ const render_viaggio = (id) => {
             `;}
         })
         viaggiContainer.innerHTML += html;
+        const card = document.querySelector('.viaggio-card');
+        if (card) {
+          const idViaggio = card.getAttribute('data-id');
+          const btnPreferito = card.querySelector('.aggiungi_preferito');
 
-
-        })
-
-      const card = document.querySelector('.viaggio-card');
-      if (card) {
-        const idViaggio = card.getAttribute('data-id');
-        const btnPreferito = card.querySelector('.aggiungi_preferito');
-
-        if (btnPreferito) {
-          btnPreferito.onclick = () => {
-            let giaPreferito = false;
-            for (let k = 0; k < preferitiList.length; k++) {
-              if (preferitiList[k].id_viaggio === idViaggio) {
-                giaPreferito = true;
-                break;
+          if (btnPreferito) {
+            btnPreferito.onclick = () => {
+              let giaPreferito = false;
+              for (let k = 0; k < preferitiList.length; k++) {
+                if (preferitiList[k].id_viaggio === idViaggio) {
+                  giaPreferito = true;
+                  break;
+                }
               }
-            }
-            if (giaPreferito) return;
+              if (giaPreferito) return;
 
-            const nuovoPreferito = {
-              id_viaggio: idViaggio,
-              id_utente: Idattuale
+              const nuovoPreferito = {
+                id_viaggio: idViaggio,
+                id_utente: Idattuale
+              };
+
+              middleware.add_preferito(nuovoPreferito)
+                .then(() => middleware.load_preferiti())
+                .then((res) => {
+                  preferitiList = res;
+                  render_viaggio(id);
+                  clearForm();
+                });
             };
-
-            middleware.add_preferito(nuovoPreferito)
-              .then(() => middleware.load_preferiti())
-              .then((res) => {
-                preferitiList = res;
-                render_viaggio(id);
-                clearForm();
-              });
-          };
+          }
         }
-      }
+        })
     });
 };
 
