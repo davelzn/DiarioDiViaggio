@@ -64,9 +64,9 @@ loginButton.onclick = () => {
     if (result !== false){
       mostraS(schHome);
       mostraN(navHome);
-      userHomeBtn.innerHTML = currentUser;
+      userHomeBtn.innerHTML = currentUser[0];
     }
-  })
+  })  
   utentiList.forEach(utente =>{
     if (utente.username === currentUser){
       Idattuale = utente.id;
@@ -213,7 +213,7 @@ function render_tappe() {
             <div class="viaggio" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
-              <p>Dal: ${tappa.data.split('T')[0]} al: boh</p>
+              <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
               <button id="el-${tappa.id_tappa}" class="elimina_tappa">Elimina</button>
             </div>
           `;
@@ -449,7 +449,7 @@ const render_viaggio = (id) => {
               <div class="viaggio-content">
                 <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
                 <p class="viaggio-descrizione">${viaggio.descrizione}</p>
-                <p class="viaggio-date">Dal: ${viaggio.data_inizio} al: boh</p>
+                <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
                 <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
               </div>
             </div>
