@@ -424,7 +424,7 @@ tappeList.forEach(tappa => {
     })
   };
 
-  const render_viaggio = (id) => {
+  function render_viaggio(id) {
   middleware.load_viaggi()
     .then((res) => {
       const viaggiList = res;
