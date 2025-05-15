@@ -97,6 +97,16 @@ const database = {
         `;
         return executeQuery(sql);
     },
+    termina_viaggio: async (id_viaggio) => {
+        const oggi = new Date().toISOString().split('T')[0];
+        let sql = `
+            UPDATE viaggio
+            SET data_fine = ?
+            WHERE id_viaggio = ?
+        `;
+        return await executeQuery(sql, [oggi, id_viaggio]);
+    },
+
 
     createTable_tappa: async () => {
         await executeQuery(`

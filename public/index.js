@@ -204,7 +204,7 @@ function render_tappe() {
   middleware.load_tappe()
     .then(res => {
       const tappeList = res;
-      console.log(tappeList);
+      //console.log(tappeList);
       let html = '';
 
       tappeList.forEach(tappa => {
@@ -331,7 +331,7 @@ document.getElementById('submitViaggio').onclick = () => {
   const data_inizio = new Date().toLocaleDateString(posizione);
   console.log(data_inizio);
   let finito = false;
-  const data_fine = "0001/01/01"
+  const data_fine = null
   let id_utente
   for (let i = 0; i < utentiList.length; i++) {
   if (utentiList[i].username === currentUser) {
@@ -362,7 +362,7 @@ document.getElementById('submitViaggio').onclick = () => {
     });
 };
 
-window.deleteViaggio = async (id=6) => {
+window.deleteViaggio = async (id) => {
   try {
     console.log(id, Idattuale)
     await middleware.delete_preferito(Idattuale, id);
@@ -389,6 +389,7 @@ window.deleteTappa = (id) => {
     render();
   });
 };
+
 
 
 function render() {
@@ -424,7 +425,7 @@ tappeList.forEach(tappa => {
     })
   };
 
-  function render_viaggio(id) {
+const render_viaggio = (id) => {
   middleware.load_viaggi()
     .then((res) => {
       const viaggiList = res;
@@ -442,7 +443,6 @@ tappeList.forEach(tappa => {
             break;
           }
         }
-
         if (viaggio.id_viaggio == id) {
           html += `
             <div class="viaggio-card" data-id="${viaggio.id_viaggio}">
@@ -456,9 +456,31 @@ tappeList.forEach(tappa => {
           `;
         }
       }
-
       viaggiContainer.innerHTML = "";
       viaggiContainer.innerHTML = html;
+      middleware.load_tappe()
+      .then((res) => {
+        const tappeList = res;
+        tappeList.reverse();
+        console.log(tappeList);
+        let html = 'TAPPE:';
+        tappeList.forEach(tappa =>{
+          if (tappa.id_viaggio == id){
+          html+= `
+              <div class="viaggio-card" data-id="${tappa.id_viaggio}">
+                <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
+                <div class="viaggio-content">
+                  <h5 class="viaggio-titolo">${tappa.titolo}</h5>
+                  <p class="viaggio-descrizione">${tappa.descrizione}</p>
+                  <p class="viaggio-date">Il: ${tappa.data.split('T')[0]}</p>
+                </div>
+              </div>
+            `;}
+        })
+        viaggiContainer.innerHTML += html;
+
+
+        })
 
       const card = document.querySelector('.viaggio-card');
       if (card) {
@@ -545,45 +567,69 @@ function render_viaggi_personali_temp(viaggiPersonali) {
       <div class="viaggio" data-id="${viaggio.id_viaggio}">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
+        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
         <div>
           <button class="btn btn-danger btn-sm elimina_viaggio" data-id="${viaggio.id_viaggio}">Elimina</button>
-          <button class="btn btn-sm conferma_viaggio" data-id="${viaggio.id_viaggio}">Termina</button>
+          ${!viaggio.data_fine ? `
+            <button class="btn btn-sm conferma_viaggio" data-id="${viaggio.id_viaggio}">Termina</button>
+          ` : ''}
         </div>
       </div>
     `;
   });
+
   ViaggiPersonaliContainer.innerHTML = html;
+
   const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
-  const confermaBtns = ViaggiPersonaliContainer.querySelectorAll(".conferma_viaggio");
-  
+  const terminaBtns = ViaggiPersonaliContainer.querySelectorAll(".conferma_viaggio");
+
   eliminaBtns.forEach(btn => {
     btn.onclick = () => {
       const id = btn.getAttribute('data-id');
       console.log("Elimino viaggio con ID:", id);
-      tappeList.forEach( tappa => {
-        if ( tappa.id_viaggio == id){
-          console.log("TATATA", tappa.id_tappa)
-          deleteTappa(tappa.id_tappa)
+      tappeList.forEach(tappa => {
+        if (tappa.id_viaggio == id) {
+          console.log("ELIMINO", tappa.id_tappa);
+          deleteTappa(tappa.id_tappa);
         }
-      })
-      deleteViaggio(id);
-    }
+      });
+      deleteViaggio(id).then(() => {
+        render_viaggi_personali_temp(viaggiPersonali);
+        mostraS(schDash);
+      });
+    };
   });
-  /*confermaBtns.forEach(btn => {
-    btn.onclick = () => {
+
+  terminaBtns.forEach(btn => {
+    btn.onclick = async () => {
       const id = btn.getAttribute('data-id');
-      console.log("Confermo viaggio con ID:", id);
-      const data_fine = new Date().toISOString().split('T')[0];
-      await fetch('/termina', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data_fine, id_viaggio: 42 }) // ID o chiave per aggiornare la riga giusta
-    });
-    }
-  })*/
+      console.log("Termino viaggio con ID:", id);
+
+      try {
+        const res = await fetch('/termina/viaggio', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id_viaggio: id })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          const viaggio = viaggiPersonali.find(v => v.id_viaggio == id);
+          if (viaggio) {
+            const oggi = new Date().toISOString().split('T')[0];
+            viaggio.data_fine = oggi;
+            render_viaggi_personali_temp(viaggiPersonali);
+            mostraS(schDash);
+          }
+        }
+      } catch (error) {
+        console.error("Errore nella fetch termina viaggio:", error);
+      }
+    };
+  });
 
   const viaggioDivs = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
   viaggioDivs.forEach(div => {
@@ -591,11 +637,25 @@ function render_viaggi_personali_temp(viaggiPersonali) {
       const id = div.getAttribute('data-id');  
       current_id_viaggio = id;
       console.log("Apro schermata tappa per ID:", id);
-      render_tappe();
-      open_schermata_tappa();
-    }
+      middleware.load_viaggi()
+        .then(res => {
+          viaggiList = res;
+          viaggiList.forEach(viaggio => {
+            if (viaggio.id_viaggio == current_id_viaggio) {
+              console.log(viaggio.data_fine);
+              if (viaggio.data_fine == null) {
+                render_tappe();
+                open_schermata_tappa();
+              } else {
+                console.log("IL VIAGGIO È GIÀ STATO TERMINATO");
+              }
+            }
+          });
+        });
+    };
   });
 }
+
 
 function clearForm() {
   document.getElementById('titolo').value = '';

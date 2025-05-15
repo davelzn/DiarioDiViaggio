@@ -45,6 +45,18 @@ app.post("/insert/viaggio", async (req, res) => {
         res.status(500).json({ result: "ok" });
     }
 });
+app.post('/termina/viaggio', async (req, res) => {
+    console.log("Richiesta ricevuta a /termina/viaggio");
+    const { id_viaggio } = req.body;
+    try {
+        await database.termina_viaggio(id_viaggio);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Errore nel terminare il viaggio:", err);
+        res.status(500).json({ success: false, error: 'Errore nel terminare il viaggio' });
+    }
+});
+
 
 app.post("/insert/tappa", upload, async (req, res) => {
     const tappa = req.body.tappa;
