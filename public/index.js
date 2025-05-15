@@ -213,7 +213,7 @@ function render_tappe() {
             <div class="viaggio" data-id="${tappa.id_tappa}">
               <h5>${tappa.titolo}</h5>
               <p>${tappa.descrizione}</p>
-              <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
+              <p>${tappa.data.split('T')[0]}</p>
               <button id="el-${tappa.id_tappa}" class="elimina_tappa">Elimina</button>
             </div>
           `;
@@ -320,6 +320,8 @@ document.getElementById('submitTappa').onclick = async () => {
     tappeList = res;
     render();
     mostraS(schDash);
+    document.getElementById('titoloTappa').value = "";
+    document.getElementById('descrizioneTappa').value = "";
     clearForm();
   }
   
