@@ -7,6 +7,16 @@ const cors = require("cors");
 const mailer = require("./js/mailer.js")
 const database = require("./js/database");
 const app = express();
+const multer = require("multer");
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, path.join(__dirname, "files"));
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.originalname);
+    }
+});
+const upload = multer({storage}).single('file');
 
 database.createTable_viaggio();
 database.createTable_utente()
@@ -19,6 +29,7 @@ app.use(cors());
 app.use('/js', express.static('js'));
 
 app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/files", express.static(path.join(__dirname, "files")));
 
 app.post('/api/login', (req, res) => {
     res.json({ success: true });
@@ -35,7 +46,7 @@ app.post("/insert/viaggio", async (req, res) => {
     }
 });
 
-app.post("/insert/tappa", async (req, res) => {
+app.post("/insert/tappa", upload, async (req, res) => {
     const tappa = req.body.tappa;
     try {
         await database.insert_tappa(tappa);
@@ -66,6 +77,7 @@ app.post("/insert/utente", async (req, res) => {
         res.status(500).json({ result: "ok" })
     }
 });
+
 
 
 app.get("/viaggi", async (req, res) => {
@@ -112,6 +124,22 @@ app.delete("/delete/preferito/:id_utente/:id_viaggio", async (req, res) => {
     await database.delete_preferiti(id_utente, id_viaggio);
     res.json({ result: "ok" });
 });
+
+app.post("/upload", (req, res) => {
+  upload(req, res, function(err) {
+    if (err) {
+      console.error("Errore upload:", err);
+      return res.status(400).json({ error: "Errore upload: 400" });
+    }
+    if (!req.file) {
+      console.error("Nessun file ricevuto");
+      return res.status(400).json({ error: "Nessun file ricevuto" });
+    }
+    console.log("File caricato:", req.file.filename);
+    res.json({ url: `/files/${req.file.filename}` });
+  });
+});
+
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {

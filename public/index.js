@@ -275,36 +275,35 @@ document.getElementById('openViaggioForm').onclick = () => {
     document.getElementById('viaggioModal').style.display = 'block';
   }};
   */
+
 document.getElementById('submitTappa').onclick = async () => {
+  const inputFile = document.querySelector('#file');
+  let filename = inputFile.value.split(/[/\\]/).pop();
   const titolo = document.getElementById('titoloTappa').value;
   const descrizione = document.getElementById('descrizioneTappa').value;
-  const imageFile = document.getElementById("imageUpload").files[0];
   const data = new Date().toLocaleDateString(posizione);
   const id_viaggio = current_id_viaggio;
-
-  if (!titolo || !descrizione || !imageFile || !data) return;
-
-  // Upload immagine a Cloudinary
   const formData = new FormData();
-  formData.append("file", imageFile);
-  formData.append("upload_preset", "tappe_unsigned"); 
-
+  formData.append("file", inputFile.files[0]);
+  const body = formData;
+  const fetchOptions = {
+    method: 'post',
+    body: body
+  };
   try {
-    const response = await fetch("https://api.cloudinary.com/v1_1/nidamato/image/upload", {
-      method: "POST",
-      body: formData
-    });
+      const res = await fetch("/upload", fetchOptions);
+      const data = await res.json();
+    } catch (e) {
+      console.log(e);
+    }
 
-    const cloudinaryData = await response.json();
-
-    const immagine_url = cloudinaryData.secure_url;
-    console.log(immagine_url)
+  if (!titolo || !descrizione || !data) return;
 
     const nuovaTappa = {
       titolo,
       descrizione,
       data,
-      immagine: immagine_url,
+      immagine: filename,
       id_viaggio
     };
 
@@ -316,12 +315,7 @@ document.getElementById('submitTappa').onclick = async () => {
     render();
     mostraS(schDash);
     clearForm();
-
-  } catch (err) {
-    console.error("Errore nel caricamento su Cloudinary:", err);
   }
-};
-
   
 
 
@@ -362,7 +356,7 @@ document.getElementById('submitViaggio').onclick = () => {
     });
 };
 
-window.deleteViaggio = async (id) => {
+window.deleteViaggio = async (id=6) => {
   try {
     console.log(id, Idattuale)
     await middleware.delete_preferito(Idattuale, id);
@@ -398,19 +392,18 @@ function render() {
     tappeList.reverse();
     let html = '';
     console.log(tappeList)                            
-    tappeList.forEach(tappa => {
-          html += `
-            <div class="viaggio-card" data-id="${tappa.id_viaggio}">
-              <img class="viaggio-img" src="${tappa.immagine}" alt="Immagine tappa">
-              <div class="viaggio-content">
-                <h5 class="viaggio-titolo">${tappa.titolo}</h5>
-                <p class="viaggio-descrizione">${tappa.descrizione}</p>
-                <p class="viaggio-date">Dal: ${tappa.data.split('T')[0]}</p>
-              </div>
-            </div>
-          `;
-          
-      });
+tappeList.forEach(tappa => {
+  html += `
+    <div class="viaggio-card" data-id="${tappa.id_viaggio}">
+      <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
+      <div class="viaggio-content">
+        <h5 class="viaggio-titolo">${tappa.titolo}</h5>
+        <p class="viaggio-descrizione">${tappa.descrizione}</p>
+        <p class="viaggio-date">Dal: ${tappa.data.split('T')[0]}</p>
+      </div>
+    </div>
+  `;
+});
       viaggiContainer.innerHTML = "";
       viaggiContainer.innerHTML = html;
       const tappeDivs = viaggiContainer.querySelectorAll(".viaggio-card");
@@ -460,11 +453,9 @@ function render_filtrati(viaggiFiltrati) {
         <p>${viaggio.descrizione}</p>
         <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
         <div>
-          <button class="elimina_viaggio btn btn-danger btn-sm">Elimina</button>
         </div>
       </div>
     `;
-    const eliminaBtns = viaggiFiltratiContainer.querySelectorAll(".elimina_viaggio");
   });
 
 }
@@ -504,12 +495,14 @@ function render_viaggi_personali_temp(viaggiPersonali) {
         <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: boh</p>
         <div>
           <button class="btn btn-danger btn-sm elimina_viaggio" data-id="${viaggio.id_viaggio}">Elimina</button>
+          <button class="btn btn-sm conferma_viaggio" data-id="${viaggio.id_viaggio}">Termina</button>
         </div>
       </div>
     `;
   });
   ViaggiPersonaliContainer.innerHTML = html;
   const eliminaBtns = ViaggiPersonaliContainer.querySelectorAll(".elimina_viaggio");
+  const confermaBtns = ViaggiPersonaliContainer.querySelectorAll(".conferma_viaggio");
   
   eliminaBtns.forEach(btn => {
     btn.onclick = () => {
@@ -524,6 +517,20 @@ function render_viaggi_personali_temp(viaggiPersonali) {
       deleteViaggio(id);
     }
   });
+  /*confermaBtns.forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.getAttribute('data-id');
+      console.log("Confermo viaggio con ID:", id);
+      const data_fine = new Date().toISOString().split('T')[0];
+      await fetch('/termina', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data_fine, id_viaggio: 42 }) // ID o chiave per aggiornare la riga giusta
+    });
+    }
+  })*/
 
   const viaggioDivs = ViaggiPersonaliContainer.querySelectorAll(".viaggio");
   viaggioDivs.forEach(div => {
