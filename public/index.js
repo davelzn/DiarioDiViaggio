@@ -525,7 +525,7 @@ function render_filtrati(viaggiFiltrati) {
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
+        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
         <div>
         </div>
       </div>
