@@ -17,7 +17,7 @@ export const createLogin = () => {
             }
 
             const data = await res.json();
-            console.log("Risposta dal server:", data);
+            //console.log("Risposta dal server:", data);
 
             if (data.success && data.user) {
                 currentUser = data.user.username;
