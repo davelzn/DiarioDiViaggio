@@ -541,7 +541,7 @@ function render_preferiti(preferiti) {
       <div class="viaggio">
         <h5>${viaggio.titolo}</h5>
         <p>${viaggio.descrizione}</p>
-        <p>Dal:${viaggio.data_inizio.split('T')[0]} al:boh</p>
+        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
         <div>
           <button class="rimuovi_preferito btn btn-danger btn-sm">Rimuovi dai preferiti</button>
         </div>
