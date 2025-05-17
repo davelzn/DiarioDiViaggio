@@ -9,7 +9,7 @@
 
 /* Corpo */
 body {
-  background: #e6f0ff; /* azzurro chiaro */
+  background: #ffffff; /* azzurro chiaro */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -54,15 +54,7 @@ header .subtitle {
 /* Schermate generali */
 .schermata_embrionale, 
 .schermata_login, 
-.schermata_reg, 
-.schermata_home, 
-.schermata_dash, 
-.schermata_search, 
-.schermata_preferiti,
-.schermata_aggiunta_tappa,
-.schermata_aggiunta_viaggio,
-.schermata_conferma_login,
-.schermata_tappe {
+.schermata_reg {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0,123,255,0.25);

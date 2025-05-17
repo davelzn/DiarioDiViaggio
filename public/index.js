@@ -196,9 +196,7 @@ function open_schermata_aggiunta_tappa(){
 }
 function open_schermata_tappa() {
   render_tappe()
-  schDash.style.display = "none";
-  schTappe.style.display = "block";
-  schAggiungiTappe.style.display ="none";
+  mostraS(schTappe);
 }
 function render_tappe() {
   middleware.load_tappe()
@@ -404,12 +402,13 @@ function render() {
 tappeList.forEach(tappa => {
   html += `
     <div class="viaggio-card" data-id="${tappa.id_viaggio}">
-      <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
       <div class="viaggio-content">
         <h5 class="viaggio-titolo">${tappa.titolo}</h5>
+        
+        <p class="viaggio-date">Data 🗓️: ${tappa.data.split('T')[0]}</p>
+        </div>
+        <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
         <p class="viaggio-descrizione">${tappa.descrizione}</p>
-        <p class="viaggio-date">Dal: ${tappa.data.split('T')[0]}</p>
-      </div>
     </div>
   `;
 });
@@ -468,16 +467,17 @@ const render_viaggio = (id) => {
         let html = 'TAPPE:';
         tappeList.forEach(tappa =>{
           if (tappa.id_viaggio == id){
-          html+= `
-              <div class="viaggio-card" data-id="${tappa.id_viaggio}">
-                <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
-                <div class="viaggio-content">
-                  <h5 class="viaggio-titolo">${tappa.titolo}</h5>
-                  <p class="viaggio-descrizione">${tappa.descrizione}</p>
-                  <p class="viaggio-date">Il: ${tappa.data.split('T')[0]}</p>
+            html += `
+            <div class="viaggio-card" data-id="${tappa.id_viaggio}">
+              <div class="viaggio-content">
+                <h5 class="viaggio-titolo">${tappa.titolo}</h5>
+                
+                <p class="viaggio-date">Data 🗓️: ${tappa.data.split('T')[0]}</p>
                 </div>
-              </div>
-            `;}
+                <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
+                <p class="viaggio-descrizione">${tappa.descrizione}</p>
+            </div>
+          `;}
         })
         viaggiContainer.innerHTML += html;
         const card = document.querySelector('.viaggio-card');
