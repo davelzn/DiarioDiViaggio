@@ -439,7 +439,7 @@ const render_viaggio = (id) => {
         let isPreferito = false;
 
         for (let j = 0; j < preferitiList.length; j++) {
-          if (preferitiList[j].id_viaggio === viaggio.id_viaggio) {
+          if (preferitiList[j].id_viaggio === viaggio.id_viaggio && preferitiList[j].id_utente === Idattuale) {
             isPreferito = true;
             break;
           }
@@ -488,26 +488,30 @@ const render_viaggio = (id) => {
           if (btnPreferito) {
             btnPreferito.onclick = () => {
               let giaPreferito = false;
+              console.log(Idattuale)
+              console.log(preferitiList)
               for (let k = 0; k < preferitiList.length; k++) {
-                if (preferitiList[k].id_viaggio === idViaggio) {
+                if (preferitiList[k].id_viaggio === idViaggio && preferitiList[k].id_utente === Idattuale) {
+                  console.log("già preferito!")
                   giaPreferito = true;
                   break;
                 }
               }
-              if (giaPreferito) return;
+              if (giaPreferito === false){
 
-              const nuovoPreferito = {
-                id_viaggio: idViaggio,
-                id_utente: Idattuale
-              };
+                const nuovoPreferito = {
+                  id_viaggio: idViaggio,
+                  id_utente: Idattuale
+                };
 
-              middleware.add_preferito(nuovoPreferito)
-                .then(() => middleware.load_preferiti())
-                .then((res) => {
-                  preferitiList = res;
-                  render_viaggio(id);
-                  clearForm();
-                });
+                middleware.add_preferito(nuovoPreferito)
+                  .then(() => middleware.load_preferiti())
+                  .then((res) => {
+                    preferitiList = res;
+                    render_viaggio(id);
+                    clearForm();
+                  });
+              }
             };
           }
         }
@@ -552,8 +556,9 @@ function render_preferiti(preferiti) {
   const rimuoviBtns = viaggiPreferitiContainer.querySelectorAll(".rimuovi_preferito");
   rimuoviBtns.forEach((btn, index) => {
     btn.onclick = async () => {
-      await middleware.delete_preferito(preferitiList[index].id_utente,preferitiList[index].id_viaggio);
-      loadViaggiPreferiti(); 
+      console.log(preferiti[index])   
+      await middleware.delete_preferito(Idattuale,preferiti[index].id_viaggio);
+      loadViaggiPreferiti(Idattuale); 
     };
   });
 }
