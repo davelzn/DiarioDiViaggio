@@ -538,7 +538,6 @@ function render_filtrati(viaggiFiltrati) {
                 <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
                 <p class="viaggio-descrizione">${viaggio.descrizione}</p>
                 <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
-                <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
               </div>
             </div>
           `;
