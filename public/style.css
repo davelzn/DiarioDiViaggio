@@ -468,12 +468,3 @@ p {
     margin-bottom: 12px;
   }
 }
-
-.dropdown-wrapper {
-  margin-left: 80%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-

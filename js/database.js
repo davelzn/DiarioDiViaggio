@@ -116,40 +116,44 @@ const database = {
                 descrizione TEXT,
                 data DATE,
                 immagine VARCHAR(200),
+                luogo VARCHAR(100),
                 id_viaggio INT,
                 CONSTRAINT fk_tappa_viaggio FOREIGN KEY (id_viaggio) REFERENCES viaggio(id_viaggio)
             )
         `);
-    },
+    },    
 
-    insert_tappa : async (tappa) => {
-        let sql =`
-            INSERT INTO tappa (titolo, descrizione, data, immagine, id_viaggio)
-            VALUES (?,?,?,?,?)
+    insert_tappa: async (tappa) => {
+        let sql = `
+            INSERT INTO tappa (titolo, descrizione, data, immagine, luogo, id_viaggio)
+            VALUES (?, ?, ?, ?, ?, ?)
         `;
         return await executeQuery(sql, [
             tappa.titolo,
             tappa.descrizione,
             tappa.data,
             tappa.immagine,
+            tappa.luogo,
             tappa.id_viaggio,
         ]);
     },
+    
 
     select_tappe: async () => {
         let sql = `
-            SELECT id_tappa, titolo, descrizione, data, immagine, id_viaggio
+            SELECT id_tappa, titolo, descrizione, data, immagine, luogo, id_viaggio
             FROM tappa
         `;
         try {
-            const result = await executeQuery(sql); // Esegui la query
+            const result = await executeQuery(sql);
             console.log("Dati delle tappe:", result);
-            return result; // Restituisci i risultati
+            return result;
         } catch (err) {
-            console.error("Errore nell'eseguire la query:", err); // Stampa l'errore
+            console.error("Errore nell'eseguire la query:", err);
             throw new Error("Errore nel recupero delle tappe");
         }
     },
+    
        filtraLog : async (username, password) => {
     let sql = `
         SELECT id, username, password, email

@@ -284,6 +284,7 @@ document.getElementById('submitTappa').onclick = async () => {
   const inputFile = document.querySelector('#file');
   let filename = inputFile.value.split(/[/\\]/).pop();
   const titolo = document.getElementById('titoloTappa').value;
+  const luogo = document.getElementById('luogoTappa').value;
   const descrizione = document.getElementById('descrizioneTappa').value;
   const data = new Date().toLocaleDateString(posizione);
   const id_viaggio = current_id_viaggio;
@@ -308,6 +309,7 @@ document.getElementById('submitTappa').onclick = async () => {
       descrizione,
       data,
       immagine: filename,
+      luogo,
       id_viaggio
     };
 
@@ -320,6 +322,7 @@ document.getElementById('submitTappa').onclick = async () => {
     mostraS(schDash);
     document.getElementById('titoloTappa').value = "";
     document.getElementById('descrizioneTappa').value = "";
+    document.getElementById('luogoTappa').value = "";
     clearForm();
   }
   
@@ -404,7 +407,7 @@ tappeList.forEach(tappa => {
     <div class="viaggio-card" data-id="${tappa.id_viaggio}">
       <div class="viaggio-content">
         <h5 class="viaggio-titolo">${tappa.titolo}</h5>
-        
+        <p class="viaggio-luogo">Luogo📍: ${tappa.luogo}</p>
         <p class="viaggio-date">Data 🗓️: ${tappa.data.split('T')[0]}</p>
         </div>
         <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
@@ -471,7 +474,7 @@ const render_viaggio = (id) => {
             <div class="viaggio-card" data-id="${tappa.id_viaggio}">
               <div class="viaggio-content">
                 <h5 class="viaggio-titolo">${tappa.titolo}</h5>
-                
+                <p class="viaggio-luogo">Luogo📍: ${tappa.luogo}</p>
                 <p class="viaggio-date">Data 🗓️: ${tappa.data.split('T')[0]}</p>
                 </div>
                 <img class="viaggio-img" src="/files/${tappa.immagine}" alt="Immagine tappa">
