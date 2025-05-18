@@ -172,25 +172,47 @@ p {
 }
 
 .navbar_homepage {
-    display: none;
-  background-color: #004a99;
+  display: none;
+  background-color: #007bff; /* Colore navbar Instagram-like */
   justify-content: space-around;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 6px;
   position: fixed;
   bottom: 0;
   width: 100%;
+  max-width: 480px;
   z-index: 999;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.15);
+  border-top: none; /* Niente bordi visibili */
+  border-radius: 0; /* Nessun bordo arrotondato */
 }
+.nav_item {
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none; /* Rimuove il bordo di focus */
+}
+
+/* Evita sfondo al clic o durante focus/active */
+.nav_item:focus,
+.nav_item:active {
+  background: none;
+  box-shadow: none;
+}
+
 
 
 
 #userNavHome {
   width: 34px;
   height: 34px;
-  background-color: #007bff;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(3, 2, 2);
   font-weight: bold;
   font-size: 16px;
   display: flex;
@@ -468,3 +490,4 @@ p {
     margin-bottom: 12px;
   }
 }
+
