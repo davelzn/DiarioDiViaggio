@@ -207,14 +207,18 @@ function render_tappe() {
 
       tappeList.forEach(tappa => {
         if (current_id_viaggio == tappa.id_viaggio) {
-          html += `
-            <div class="viaggio" data-id="${tappa.id_tappa}">
-              <h5>${tappa.titolo}</h5>
-              <p>${tappa.descrizione}</p>
-              <p>${tappa.data.split('T')[0]}</p>
-              <button id="el-${tappa.id_tappa}" class="elimina_tappa">Elimina</button>
-            </div>
-          `;
+          html +=`
+    <div class="viaggio-card" data-id="${tappa.id_viaggio}">
+      <div class="viaggio-content">
+        <h5 class="viaggio-titolo">${tappa.titolo}</h5>
+        <p class="viaggio-luogo">Luogo📍: ${tappa.luogo}</p>
+        <p class="viaggio-date">Data 🗓️: ${tappa.data.split('T')[0]}</p>
+        </div>
+        <img class="viaggio-img-pers" src="/files/${tappa.immagine}" alt="Immagine tappa">
+        <p class="viaggio-descrizione">${tappa.descrizione}</p>
+        <button id="el-${tappa.id_tappa}" class="elimina_tappa">Elimina</button>
+    </div>
+  `;
         }
       });
       //console.log(html)
@@ -529,14 +533,15 @@ function render_filtrati(viaggiFiltrati) {
   viaggiFiltratiContainer.innerHTML = '';
   viaggiFiltrati.forEach(viaggio => {
     viaggiFiltratiContainer.innerHTML += `
-      <div class="viaggio">
-        <h5>${viaggio.titolo}</h5>
-        <p>${viaggio.descrizione}</p>
-        <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
-        <div>
-        </div>
-      </div>
-    `;
+            <div class="viaggio-card" data-id="${viaggio.id_viaggio}">
+              <div class="viaggio-content">
+                <h5 class="viaggio-titolo">${viaggio.titolo}</h5>
+                <p class="viaggio-descrizione">${viaggio.descrizione}</p>
+                <p>Dal: ${viaggio.data_inizio.split('T')[0]} al: ${viaggio.data_fine ? viaggio.data_fine : "in corso..."}</p>
+                <button class="aggiungi_preferito btn btn-sm" ${isPreferito ? "disabled" : ""}>❤️ Preferito</button>
+              </div>
+            </div>
+          `;
   });
 
 }

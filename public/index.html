@@ -50,35 +50,46 @@
         <div class="schermata_home" id = "schermata_home">
             <div class="viaggi-container" id="viaggi_container" style="display:none;"></div>
         </div>
-        <div class="schermata_dash" id = "schermata_dash">
-            <p>I tuoi viaggi</p>
+        <div class="schermata_dash" id="schermata_dash">
+            <h2 class="titolo-viaggi">🌍 I tuoi viaggi</h2>
             <div class="viaggi-personali-container" id="viaggi_personali_container"></div>
-            
         </div>
-        <div class="schermata_search" id = "schermata_search">
+          
+        <div class="schermata_search" id="schermata_search">
             <div class="container">
-                <input type="text" id="searchInput" placeholder="Cerca un viaggio...">
-                <button id="searchTrip">🔍</button>
+                <h2 class="titolo-search">🔍 Cerca tra i viaggi</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Es. Roma, Portogallo, Asia">
+                    <button id="searchTrip">Cerca</button>
+                </div>
                 <div class="viaggi-filtrati-container" id="viaggi_filtrati_container" style="display:none;"></div>
             </div>
         </div>
+          
         <div class="schermata_preferiti" id="schermata_preferiti" style="display:none;">
-                <div class="container">
-                <h5>I tuoi preferiti ❤️</h5>
+            <div class="container">
+                <h2 class="titolo-preferiti">❤️ I tuoi preferiti</h2>
                 <div class="viaggi-preferiti-container" id="viaggi_preferiti_container"></div>
             </div>
         </div>
+          
 
         <div class="schermata_aggiunta_tappa" id="schermata_aggiunta_tappa" style="display:none;">
             <label for="titoloTappa">Titolo</label>
             <input id="titoloTappa" type="text" required>
+        
             <label for="luogoTappa">Luogo</label>
             <input id="luogoTappa" type="text">
+        
             <label for="descrizioneTappa">Descrizione</label>
             <textarea id="descrizioneTappa" class="form-control" rows="3" required></textarea>
-            <input id="file" name="file" type="file" single>
+        
+            <label class="file-upload-wrapper" for="file"></label>
+            <input id="file" name="file" type="file">
+        
             <button id="submitTappa">Salva</button>
         </div>
+          
         <div class="schermata_aggiunta_viaggio" id="schermata_aggiunta_viaggio" style="display:none;">
             <label for="titolo">Titolo</label>
             <input id="titolo" type="text" required>
@@ -98,7 +109,7 @@
                 <button class="nav_item" id="homeNavHome">🏠</button>
                 <button class="nav_item" id="searchNavHome">🔍</button>
                 <button class="nav_item" id="addTrip">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"/>
                         <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
